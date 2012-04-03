@@ -16,11 +16,6 @@
         # We do not use TLS over UDP on Chromium so far.
         'OPENSSL_NO_DTLS1',
       ],
-      'copts': [
-        '-w',
-        '-Wno-cast-qual',
-        '-Wno-error',
-      ],
       'sources': [
         'openssl/ssl/bio_ssl.c',
         'openssl/ssl/d1_both.c',
@@ -659,6 +654,19 @@
             ['exclude', 'mdc2/.*$'],
           ],
         }],
+        ['clang==1', {
+          'cflags': [
+            # OpenSSL has a few |if ((foo == NULL))| checks.
+            '-Wno-parentheses-equality',
+            # OpenSSL uses several function-style macros and then ignores the
+            # returned value.
+            '-Wno-unused-value',
+          ],
+        }, { # Not clang. Disable all warnings.
+          'cflags': [
+            '-w',
+          ],
+        }]
       ],
       'include_dirs': [
         '.',

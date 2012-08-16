@@ -3,7 +3,7 @@ URL: http://openssl.org/source/
 Version: 1.0.0f
 License: BSDish
 License File: openssl/LICENSE
-License Android Compatibile: yes
+License Android Compatible: yes
 Security Critical: yes
 
 Description:

@@ -96,3 +96,7 @@ Android platform support
 
 Copy config/android/openssl/opensslconf.h from Android's
 external/openssl/include/openssl/opensslconf.h
+
+
+clang.patch
+Fix warnings when building with clang

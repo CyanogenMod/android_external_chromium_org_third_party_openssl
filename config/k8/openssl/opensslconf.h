@@ -5,6 +5,9 @@
 #ifndef OPENSSL_DOING_MAKEDEPEND
 
 
+#ifndef OPENSSL_NO_ASM
+# define OPENSSL_NO_ASM
+#endif
 #ifndef OPENSSL_NO_CAMELLIA
 # define OPENSSL_NO_CAMELLIA
 #endif
@@ -13,6 +16,9 @@
 #endif
 #ifndef OPENSSL_NO_CMS
 # define OPENSSL_NO_CMS
+#endif
+#ifndef OPENSSL_NO_EC_NISTP_64_GCC_128
+# define OPENSSL_NO_EC_NISTP_64_GCC_128
 #endif
 #ifndef OPENSSL_NO_FIPS
 # define OPENSSL_NO_FIPS
@@ -38,11 +44,11 @@
 #ifndef OPENSSL_NO_RFC3779
 # define OPENSSL_NO_RFC3779
 #endif
+#ifndef OPENSSL_NO_SCTP
+# define OPENSSL_NO_SCTP
+#endif
 #ifndef OPENSSL_NO_SEED
 # define OPENSSL_NO_SEED
-#endif
-#ifndef OPENSSL_NO_ASM
-# define OPENSSL_NO_ASM
 #endif
 
 #endif /* OPENSSL_DOING_MAKEDEPEND */

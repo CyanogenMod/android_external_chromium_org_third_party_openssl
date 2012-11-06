@@ -626,7 +626,7 @@ MY_CFLAGS := \
 	-march=armv7-a \
 	-mtune=cortex-a8 \
 	-mfloat-abi=softfp \
-	-mfpu=neon \
+	-mfpu=vfpv3-d16 \
 	-fno-tree-sra \
 	-fuse-ld=gold \
 	-Wno-psabi \

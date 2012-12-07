@@ -19,10 +19,13 @@
       'sources': [
         'openssl/ssl/bio_ssl.c',
         'openssl/ssl/d1_both.c',
+        'openssl/ssl/d1_clnt.c',
         'openssl/ssl/d1_enc.c',
         'openssl/ssl/d1_lib.c',
+        'openssl/ssl/d1_meth.c',
         'openssl/ssl/d1_pkt.c',
         'openssl/ssl/d1_srtp.c',
+        'openssl/ssl/d1_srvr.c',
         'openssl/ssl/kssl.c',
         'openssl/ssl/s23_clnt.c',
         'openssl/ssl/s23_lib.c',

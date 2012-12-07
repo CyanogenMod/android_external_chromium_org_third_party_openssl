@@ -11,6 +11,9 @@
 #ifndef OPENSSL_NO_CAMELLIA
 # define OPENSSL_NO_CAMELLIA
 #endif
+#ifndef OPENSSL_NO_CAST
+# define OPENSSL_NO_CAST
+#endif
 #ifndef OPENSSL_NO_CAPIENG
 # define OPENSSL_NO_CAPIENG
 #endif
@@ -49,6 +52,12 @@
 #endif
 #ifndef OPENSSL_NO_SEED
 # define OPENSSL_NO_SEED
+#endif
+#ifndef OPENSSL_NO_SHA0
+# define OPENSSL_NO_SHA0
+#endif
+#ifndef OPENSSL_NO_WHIRLPOOL
+# define OPENSSL_NO_WHIRLPOOL
 #endif
 
 #endif /* OPENSSL_DOING_MAKEDEPEND */

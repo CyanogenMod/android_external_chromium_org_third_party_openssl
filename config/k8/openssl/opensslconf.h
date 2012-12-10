@@ -112,8 +112,6 @@
 # endif
 #endif
 
-#define OPENSSL_CPUID_OBJ
-
 /* crypto/opensslconf.h.in */
 
 #ifdef OPENSSL_DOING_MAKEDEPEND

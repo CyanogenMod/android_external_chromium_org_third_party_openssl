@@ -605,16 +605,16 @@ MY_CFLAGS := \
 	-finline-limit=64 \
 	-Wa,--noexecstack \
 	-U_FORTIFY_SOURCE \
-	-Wno-error=extra \
-	-Wno-error=ignored-qualifiers \
-	-Wno-error=type-limits \
-	-Wno-error=non-virtual-dtor \
-	-Wno-error=sign-promo \
-	-Wno-error=address \
-	-Wno-error=format-security \
-	-Wno-error=non-virtual-dtor \
-	-Wno-error=return-type \
-	-Wno-error=sequence-point \
+	-Wno-extra \
+	-Wno-ignored-qualifiers \
+	-Wno-type-limits \
+	-Wno-non-virtual-dtor \
+	-Wno-sign-promo \
+	-Wno-address \
+	-Wno-format-security \
+	-Wno-non-virtual-dtor \
+	-Wno-return-type \
+	-Wno-sequence-point \
 	-Os \
 	-g \
 	-fomit-frame-pointer \

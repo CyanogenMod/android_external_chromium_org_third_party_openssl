@@ -5,9 +5,6 @@
 #ifndef OPENSSL_DOING_MAKEDEPEND
 
 
-#ifndef OPENSSL_NO_ASM
-# define OPENSSL_NO_ASM
-#endif
 #ifndef OPENSSL_NO_CAMELLIA
 # define OPENSSL_NO_CAMELLIA
 #endif
@@ -68,6 +65,19 @@
 #ifndef OPENSSL_NO_DYNAMIC_ENGINE
 # define OPENSSL_NO_DYNAMIC_ENGINE
 #endif
+
+/* Use x86_64 assembler functions - taken from Android/x86 config */
+# define OPENSSL_BN_ASM_GF2m
+# define OPENSSL_BN_ASM_MONT
+# define AES_ASM
+# define GHASH_ASM
+# define SHA1_ASM
+# define SHA256_ASM
+# define SHA512_ASM
+# define MD5_ASM
+# define DES_PTR
+# define DES_RISC1
+# define DES_UNROLL
 
 /* The OPENSSL_NO_* macros are also defined as NO_* if the application
    asks for it.  This is a transient feature that is provided for those

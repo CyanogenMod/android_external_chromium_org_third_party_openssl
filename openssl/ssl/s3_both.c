@@ -551,7 +551,8 @@ long ssl3_get_message(SSL *s, int st1, int stn, int mt, long max, int *ok)
 		ssl3_take_mac(s);
 #endif
 	/* Feed this message into MAC computation. */
-	ssl3_finish_mac(s, (unsigned char *)s->init_buf->data, s->init_num + 4);
+	if (*s->init_buf->data != SSL3_MT_ENCRYPTED_EXTENSIONS)
+		ssl3_finish_mac(s, (unsigned char *)s->init_buf->data, s->init_num + 4);
 	if (s->msg_callback)
 		s->msg_callback(0, s->version, SSL3_RT_HANDSHAKE, s->init_buf->data, (size_t)s->init_num + 4, s, s->msg_callback_arg);
 	*ok=1;
@@ -752,20 +753,13 @@ int ssl3_setup_read_buffer(SSL *s)
 
 	if (s->s3->rbuf.buf == NULL)
 		{
-		if (SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS)
+		len = SSL3_RT_MAX_PLAIN_LENGTH
+			+ SSL3_RT_MAX_ENCRYPTED_OVERHEAD
+			+ headerlen + align;
+		if (s->options & SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER)
 			{
-			len = SSL3_RT_DEFAULT_PACKET_SIZE;
-			}
-  		else
-			{
-			len = SSL3_RT_MAX_PLAIN_LENGTH
-				+ SSL3_RT_MAX_ENCRYPTED_OVERHEAD
-				+ headerlen + align;
-			if (s->options & SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER)
-				{
-				s->s3->init_extra = 1;
-				len += SSL3_RT_MAX_EXTRA;
-				}
+			s->s3->init_extra = 1;
+			len += SSL3_RT_MAX_EXTRA;
 			}
 #ifndef OPENSSL_NO_COMP
 		if (!(s->options & SSL_OP_NO_COMPRESSION))
@@ -801,15 +795,7 @@ int ssl3_setup_write_buffer(SSL *s)
 
 	if (s->s3->wbuf.buf == NULL)
 		{
-		if (SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS)
-			{
-			len = SSL3_RT_DEFAULT_PACKET_SIZE;
-			}
-  		else
-			{
-			len = s->max_send_fragment;
-			}
-		len += 0
+		len = s->max_send_fragment
 			+ SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD
 			+ headerlen + align;
 #ifndef OPENSSL_NO_COMP
@@ -819,6 +805,7 @@ int ssl3_setup_write_buffer(SSL *s)
 		if (!(s->options & SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS))
 			len += headerlen + align
 				+ SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD;
+
 		if ((p=freelist_extract(s->ctx, 0, len)) == NULL)
 			goto err;
 		s->s3->wbuf.buf = p;
@@ -861,3 +848,4 @@ int ssl3_release_read_buffer(SSL *s)
 		}
 	return 1;
 	}
+

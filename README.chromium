@@ -115,7 +115,3 @@ which causes some tests failed. This patch gives a way to find a
 certificate according to its hash by using both new algorithm and old
 algorithm. crbug.com/111045 is used to track this issue.
 
-fix-clang-build.patch
-
-Small patch to fix various minor issues which prevent building the library
-with Clang.

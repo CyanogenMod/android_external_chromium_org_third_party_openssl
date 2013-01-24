@@ -633,6 +633,7 @@
         ['target_arch == "x64"', {
           'sources!': [
             'openssl/crypto/aes/aes_cbc.c',
+            'openssl/crypto/mem_clr.c',
             'openssl/crypto/rc4/rc4_enc.c',
           ],
           'sources': [

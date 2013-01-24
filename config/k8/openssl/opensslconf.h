@@ -79,6 +79,8 @@
 # define DES_RISC1
 # define DES_UNROLL
 
+#define OPENSSL_CPUID_OBJ
+
 /* The OPENSSL_NO_* macros are also defined as NO_* if the application
    asks for it.  This is a transient feature that is provided for those
    who haven't had the time to do the appropriate changes in their

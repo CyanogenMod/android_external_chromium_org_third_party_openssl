@@ -1064,7 +1064,10 @@ int ssl3_get_server_hello(SSL *s)
 	 * client authentication.
 	 */
 	if (TLS1_get_version(s) < TLS1_2_VERSION && !ssl3_digest_cached_records(s))
+		{
+		al = SSL_AD_INTERNAL_ERROR;
 		goto f_err;
+		}
 	/* lets get the compression algorithm */
 	/* COMPRESSION */
 #ifdef OPENSSL_NO_COMP
@@ -3473,7 +3476,7 @@ int ssl3_send_channel_id(SSL *s)
 		}
 
 	derp = der_sig;
-	sig = d2i_ECDSA_SIG(NULL, &derp, sig_len);
+	sig = d2i_ECDSA_SIG(NULL, (const unsigned char**)&derp, sig_len);
 	if (sig == NULL)
 		{
 		SSLerr(SSL_F_SSL3_SEND_CHANNEL_ID,SSL_R_D2I_ECDSA_SIG);

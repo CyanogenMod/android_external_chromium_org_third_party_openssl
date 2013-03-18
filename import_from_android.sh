@@ -328,6 +328,19 @@ if [ "$OPENSSL_SHA1_DOWNLOADED" != "$OPENSSL_SHA1_EXPECTED" ]; then
 fi
 dump "Checking content of downloaded package: ok"
 
+# The import_openssl.sh script will really remove the existing 'openssl'
+# directory and replace it with something completely new. This is a problem
+# when using subversion because this also gets rid of all .svn
+# subdirectories. This makes it impossible to commit the right set of
+# changes with "gcl commit".
+#
+# To work-around this, copy all the .svn subdirectories into a temporary
+# tarball, which will be extracted after the import process.
+#
+dump "Saving .svn subdirectories"
+SAVED_SVN_TARBALL=$BUILD_DIR/saved-svn-subdirs.tar.gz
+run tar czf $SAVED_SVN_TARBALL $(find . -type d -name ".svn")
+
 # Re-run the import_openssl.sh script.
 dump "Re-running the 'import_openssl.sh' script to reconfigure all sources."
 (
@@ -345,6 +358,9 @@ run cp -rp "$ANDROID_SRC_DIR" "$PROGDIR/openssl.new"
 run mv "$PROGDIR/openssl" "$PROGDIR/openssl.old"
 run mv "$PROGDIR/openssl.new" "$PROGDIR/openssl"
 run rm -rf "$PROGDIR/openssl.old"
+
+dump "Restoring .svn subdirectores"
+run tar xzf $SAVED_SVN_TARBALL
 
 # Extract list of source files or compiler defines from openssl.config
 # variable definition. This assumes that the lists are in variables that

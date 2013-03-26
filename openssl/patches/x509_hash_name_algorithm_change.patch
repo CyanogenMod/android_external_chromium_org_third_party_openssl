@@ -1,5 +1,6 @@
---- openssl-1.0.0f-origin/crypto/x509/by_dir.c	2012-01-19 02:20:24.821550944 +0800
-+++ openssl-1.0.0f/crypto/x509/by_dir.c	2012-01-19 23:36:53.597870429 +0800
+diff -burN android-openssl.orig/crypto/x509/by_dir.c android-openssl/crypto/x509/by_dir.c
+--- android-openssl.orig/crypto/x509/by_dir.c	2013-03-25 11:30:17.775049611 +0100
++++ android-openssl/crypto/x509/by_dir.c	2013-03-25 11:31:52.936070192 +0100
 @@ -287,6 +287,8 @@
  	int ok=0;
  	int i,j,k;
@@ -9,19 +10,20 @@
  	BUF_MEM *b=NULL;
  	X509_OBJECT stmp,*tmp;
  	const char *postfix="";
-@@ -323,6 +325,11 @@
+@@ -322,7 +324,11 @@
+ 	
  	ctx=(BY_DIR *)xl->method_data;
  
- 	h=X509_NAME_hash(name);
-+	hash_array[0]=h;
+-	h=X509_NAME_hash(name);
++	hash_array[0]=X509_NAME_hash(name);
 +	hash_array[1]=X509_NAME_hash_old(name);
-+	for (hash_index=0; hash_index < 2; hash_index++)
++	for (hash_index=0; hash_index < 2; ++hash_index)
 +		{
 +		h=hash_array[hash_index];
  	for (i=0; i < sk_BY_DIR_ENTRY_num(ctx->dirs); i++)
  		{
  		BY_DIR_ENTRY *ent;
-@@ -476,6 +483,7 @@
+@@ -476,6 +482,7 @@
  			goto finish;
  			}
  		}

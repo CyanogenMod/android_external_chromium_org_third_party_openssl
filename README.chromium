@@ -153,6 +153,21 @@ Chromium-specific patches:
 The list of Chromium-specific patches to apply to the Android tree is
 located in patches.chromium/. Currently this consists of:
 
+  x509_hash_name_algorithm_change.patch
+    Ensure the library can find the right files under /etc/ssl/certs when
+    running on older systems.
+
+    There are many symbolic links under /etc/ssl/certs created by using
+    hash of the PEM certificates in order for OpenSSL to find those
+    certificates. Openssl has a tool to help you create hash symbolic
+    links (tools/c_rehash).  However newer versions of the library changed
+    the hash algorithm, which makes it unable to run properly on systems
+    that use the old /etc/ssl/certs layout (e.g. Ubuntu Lucid).
+
+    This patch gives a way to find a certificate according to its hash by
+    using both the old and new algorithms. http://crbug.com/111045 is used
+    to track this issue.
+
   enable-dtls1.patch:
     Enable DTLSv1, which is disabled by default in the Android platform
     configuration.

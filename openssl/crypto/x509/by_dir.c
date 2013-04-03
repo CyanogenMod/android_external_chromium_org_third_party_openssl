@@ -324,10 +324,9 @@ static int get_cert_by_subject(X509_LOOKUP *xl, int type, X509_NAME *name,
 	
 	ctx=(BY_DIR *)xl->method_data;
 
-	h=X509_NAME_hash(name);
-	hash_array[0]=h;
+	hash_array[0]=X509_NAME_hash(name);
 	hash_array[1]=X509_NAME_hash_old(name);
-	for (hash_index=0; hash_index < 2; hash_index++)
+	for (hash_index=0; hash_index < 2; ++hash_index)
 		{
 		h=hash_array[hash_index];
 	for (i=0; i < sk_BY_DIR_ENTRY_num(ctx->dirs); i++)

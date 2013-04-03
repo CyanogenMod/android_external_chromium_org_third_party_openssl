@@ -22,52 +22,17 @@ LOCAL_GENERATED_SOURCES :=
 GYP_COPIED_SOURCE_ORIGIN_DIRS :=
 
 LOCAL_SRC_FILES := \
-	third_party/openssl/openssl/ssl/bio_ssl.c \
-	third_party/openssl/openssl/ssl/d1_both.c \
-	third_party/openssl/openssl/ssl/d1_clnt.c \
-	third_party/openssl/openssl/ssl/d1_enc.c \
-	third_party/openssl/openssl/ssl/d1_lib.c \
-	third_party/openssl/openssl/ssl/d1_meth.c \
-	third_party/openssl/openssl/ssl/d1_pkt.c \
-	third_party/openssl/openssl/ssl/d1_srtp.c \
-	third_party/openssl/openssl/ssl/d1_srvr.c \
-	third_party/openssl/openssl/ssl/kssl.c \
-	third_party/openssl/openssl/ssl/s23_clnt.c \
-	third_party/openssl/openssl/ssl/s23_lib.c \
-	third_party/openssl/openssl/ssl/s23_meth.c \
-	third_party/openssl/openssl/ssl/s23_pkt.c \
-	third_party/openssl/openssl/ssl/s23_srvr.c \
-	third_party/openssl/openssl/ssl/s2_clnt.c \
-	third_party/openssl/openssl/ssl/s2_enc.c \
-	third_party/openssl/openssl/ssl/s2_lib.c \
-	third_party/openssl/openssl/ssl/s2_meth.c \
-	third_party/openssl/openssl/ssl/s2_pkt.c \
-	third_party/openssl/openssl/ssl/s2_srvr.c \
-	third_party/openssl/openssl/ssl/s3_both.c \
-	third_party/openssl/openssl/ssl/s3_clnt.c \
-	third_party/openssl/openssl/ssl/s3_enc.c \
-	third_party/openssl/openssl/ssl/s3_lib.c \
-	third_party/openssl/openssl/ssl/s3_meth.c \
-	third_party/openssl/openssl/ssl/s3_pkt.c \
-	third_party/openssl/openssl/ssl/s3_srvr.c \
-	third_party/openssl/openssl/ssl/ssl_algs.c \
-	third_party/openssl/openssl/ssl/ssl_asn1.c \
-	third_party/openssl/openssl/ssl/ssl_cert.c \
-	third_party/openssl/openssl/ssl/ssl_ciph.c \
-	third_party/openssl/openssl/ssl/ssl_err.c \
-	third_party/openssl/openssl/ssl/ssl_err2.c \
-	third_party/openssl/openssl/ssl/ssl_lib.c \
-	third_party/openssl/openssl/ssl/ssl_rsa.c \
-	third_party/openssl/openssl/ssl/ssl_sess.c \
-	third_party/openssl/openssl/ssl/ssl_stat.c \
-	third_party/openssl/openssl/ssl/ssl_txt.c \
-	third_party/openssl/openssl/ssl/t1_clnt.c \
-	third_party/openssl/openssl/ssl/t1_enc.c \
-	third_party/openssl/openssl/ssl/t1_lib.c \
-	third_party/openssl/openssl/ssl/t1_meth.c \
-	third_party/openssl/openssl/ssl/t1_reneg.c \
-	third_party/openssl/openssl/ssl/t1_srvr.c \
-	third_party/openssl/openssl/ssl/tls_srp.c \
+	third_party/openssl/openssl/crypto/cryptlib.c \
+	third_party/openssl/openssl/crypto/mem.c \
+	third_party/openssl/openssl/crypto/mem_dbg.c \
+	third_party/openssl/openssl/crypto/cversion.c \
+	third_party/openssl/openssl/crypto/ex_data.c \
+	third_party/openssl/openssl/crypto/cpt_err.c \
+	third_party/openssl/openssl/crypto/ebcdic.c \
+	third_party/openssl/openssl/crypto/uid.c \
+	third_party/openssl/openssl/crypto/o_time.c \
+	third_party/openssl/openssl/crypto/o_str.c \
+	third_party/openssl/openssl/crypto/o_dir.c \
 	third_party/openssl/openssl/crypto/aes/aes_cfb.c \
 	third_party/openssl/openssl/crypto/aes/aes_ctr.c \
 	third_party/openssl/openssl/crypto/aes/aes_ecb.c \
@@ -216,9 +181,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/conf/conf_mall.c \
 	third_party/openssl/openssl/crypto/conf/conf_mod.c \
 	third_party/openssl/openssl/crypto/conf/conf_sap.c \
-	third_party/openssl/openssl/crypto/cpt_err.c \
-	third_party/openssl/openssl/crypto/cryptlib.c \
-	third_party/openssl/openssl/crypto/cversion.c \
 	third_party/openssl/openssl/crypto/des/cbc_cksm.c \
 	third_party/openssl/openssl/crypto/des/cbc_enc.c \
 	third_party/openssl/openssl/crypto/des/cfb64ede.c \
@@ -270,7 +232,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/dso/dso_lib.c \
 	third_party/openssl/openssl/crypto/dso/dso_null.c \
 	third_party/openssl/openssl/crypto/dso/dso_openssl.c \
-	third_party/openssl/openssl/crypto/ebcdic.c \
 	third_party/openssl/openssl/crypto/ec/ec2_mult.c \
 	third_party/openssl/openssl/crypto/ec/ec2_oct.c \
 	third_party/openssl/openssl/crypto/ec/ec2_smpl.c \
@@ -348,6 +309,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/evp/e_xcbc_d.c \
 	third_party/openssl/openssl/crypto/evp/encode.c \
 	third_party/openssl/openssl/crypto/evp/evp_acnf.c \
+	third_party/openssl/openssl/crypto/evp/evp_cnf.c \
 	third_party/openssl/openssl/crypto/evp/evp_enc.c \
 	third_party/openssl/openssl/crypto/evp/evp_err.c \
 	third_party/openssl/openssl/crypto/evp/evp_key.c \
@@ -378,7 +340,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/evp/pmeth_fn.c \
 	third_party/openssl/openssl/crypto/evp/pmeth_gn.c \
 	third_party/openssl/openssl/crypto/evp/pmeth_lib.c \
-	third_party/openssl/openssl/crypto/ex_data.c \
 	third_party/openssl/openssl/crypto/hmac/hm_ameth.c \
 	third_party/openssl/openssl/crypto/hmac/hm_pmeth.c \
 	third_party/openssl/openssl/crypto/hmac/hmac.c \
@@ -389,9 +350,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/md4/md4_one.c \
 	third_party/openssl/openssl/crypto/md5/md5_dgst.c \
 	third_party/openssl/openssl/crypto/md5/md5_one.c \
-	third_party/openssl/openssl/crypto/mem.c \
-	third_party/openssl/openssl/crypto/mem_clr.c \
-	third_party/openssl/openssl/crypto/mem_dbg.c \
 	third_party/openssl/openssl/crypto/modes/cbc128.c \
 	third_party/openssl/openssl/crypto/modes/ccm128.c \
 	third_party/openssl/openssl/crypto/modes/cfb128.c \
@@ -399,10 +357,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/modes/gcm128.c \
 	third_party/openssl/openssl/crypto/modes/ofb128.c \
 	third_party/openssl/openssl/crypto/modes/xts128.c \
-	third_party/openssl/openssl/crypto/o_dir.c \
 	third_party/openssl/openssl/crypto/o_init.c \
-	third_party/openssl/openssl/crypto/o_str.c \
-	third_party/openssl/openssl/crypto/o_time.c \
 	third_party/openssl/openssl/crypto/objects/o_names.c \
 	third_party/openssl/openssl/crypto/objects/obj_dat.c \
 	third_party/openssl/openssl/crypto/objects/obj_err.c \
@@ -457,6 +412,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/rand/rand_err.c \
 	third_party/openssl/openssl/crypto/rand/rand_lib.c \
 	third_party/openssl/openssl/crypto/rand/rand_unix.c \
+	third_party/openssl/openssl/crypto/rand/rand_win.c \
 	third_party/openssl/openssl/crypto/rand/randfile.c \
 	third_party/openssl/openssl/crypto/rc2/rc2_cbc.c \
 	third_party/openssl/openssl/crypto/rc2/rc2_ecb.c \
@@ -502,7 +458,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/ui/ui_lib.c \
 	third_party/openssl/openssl/crypto/ui/ui_openssl.c \
 	third_party/openssl/openssl/crypto/ui/ui_util.c \
-	third_party/openssl/openssl/crypto/uid.c \
 	third_party/openssl/openssl/crypto/x509/by_dir.c \
 	third_party/openssl/openssl/crypto/x509/by_file.c \
 	third_party/openssl/openssl/crypto/x509/x509_att.c \
@@ -561,6 +516,52 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/x509v3/v3_sxnet.c \
 	third_party/openssl/openssl/crypto/x509v3/v3_utl.c \
 	third_party/openssl/openssl/crypto/x509v3/v3err.c \
+	third_party/openssl/openssl/ssl/bio_ssl.c \
+	third_party/openssl/openssl/ssl/d1_both.c \
+	third_party/openssl/openssl/ssl/d1_clnt.c \
+	third_party/openssl/openssl/ssl/d1_enc.c \
+	third_party/openssl/openssl/ssl/d1_lib.c \
+	third_party/openssl/openssl/ssl/d1_pkt.c \
+	third_party/openssl/openssl/ssl/d1_srtp.c \
+	third_party/openssl/openssl/ssl/d1_srvr.c \
+	third_party/openssl/openssl/ssl/kssl.c \
+	third_party/openssl/openssl/ssl/s23_clnt.c \
+	third_party/openssl/openssl/ssl/s23_lib.c \
+	third_party/openssl/openssl/ssl/s23_meth.c \
+	third_party/openssl/openssl/ssl/s23_pkt.c \
+	third_party/openssl/openssl/ssl/s23_srvr.c \
+	third_party/openssl/openssl/ssl/s2_clnt.c \
+	third_party/openssl/openssl/ssl/s2_enc.c \
+	third_party/openssl/openssl/ssl/s2_lib.c \
+	third_party/openssl/openssl/ssl/s2_meth.c \
+	third_party/openssl/openssl/ssl/s2_pkt.c \
+	third_party/openssl/openssl/ssl/s2_srvr.c \
+	third_party/openssl/openssl/ssl/s3_both.c \
+	third_party/openssl/openssl/ssl/s3_cbc.c \
+	third_party/openssl/openssl/ssl/s3_clnt.c \
+	third_party/openssl/openssl/ssl/s3_enc.c \
+	third_party/openssl/openssl/ssl/s3_lib.c \
+	third_party/openssl/openssl/ssl/s3_meth.c \
+	third_party/openssl/openssl/ssl/s3_pkt.c \
+	third_party/openssl/openssl/ssl/s3_srvr.c \
+	third_party/openssl/openssl/ssl/ssl_algs.c \
+	third_party/openssl/openssl/ssl/ssl_asn1.c \
+	third_party/openssl/openssl/ssl/ssl_cert.c \
+	third_party/openssl/openssl/ssl/ssl_ciph.c \
+	third_party/openssl/openssl/ssl/ssl_err.c \
+	third_party/openssl/openssl/ssl/ssl_err2.c \
+	third_party/openssl/openssl/ssl/ssl_lib.c \
+	third_party/openssl/openssl/ssl/ssl_rsa.c \
+	third_party/openssl/openssl/ssl/ssl_sess.c \
+	third_party/openssl/openssl/ssl/ssl_stat.c \
+	third_party/openssl/openssl/ssl/ssl_txt.c \
+	third_party/openssl/openssl/ssl/t1_clnt.c \
+	third_party/openssl/openssl/ssl/t1_enc.c \
+	third_party/openssl/openssl/ssl/t1_lib.c \
+	third_party/openssl/openssl/ssl/t1_meth.c \
+	third_party/openssl/openssl/ssl/t1_reneg.c \
+	third_party/openssl/openssl/ssl/t1_srvr.c \
+	third_party/openssl/openssl/ssl/tls_srp.c \
 	third_party/openssl/openssl/crypto/aes/asm/aes-586.S \
 	third_party/openssl/openssl/crypto/aes/asm/aesni-x86.S \
 	third_party/openssl/openssl/crypto/aes/asm/vpaes-x86.S \
@@ -575,7 +576,8 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/modes/asm/ghash-x86.S \
 	third_party/openssl/openssl/crypto/sha/asm/sha1-586.S \
 	third_party/openssl/openssl/crypto/sha/asm/sha256-586.S \
-	third_party/openssl/openssl/crypto/sha/asm/sha512-586.S
+	third_party/openssl/openssl/crypto/sha/asm/sha512-586.S \
+	third_party/openssl/openssl/crypto/x86cpuid.S
 
 
 # Flags passed to both C and C++ files.
@@ -631,12 +633,22 @@ MY_DEFS := \
 	'-DUSE_OPENSSL=1' \
 	'-DENABLE_EGLIMAGE=1' \
 	'-DENABLE_LANGUAGE_DETECTION=1' \
-	'-DL_ENDIAN' \
-	'-DOPENSSL_THREADS' \
+	'-DNO_WINDOWS_BRAINDEATH' \
 	'-DPURIFY' \
-	'-DTERMIO' \
-	'-D_REENTRANT' \
-	'-DOPENSSL_NO_DTLS1' \
+	'-DMONOLITH' \
+	'-DOPENSSL_BN_ASM_GF2m' \
+	'-DOPENSSL_BN_ASM_MONT' \
+	'-DOPENSSL_BN_ASM_PART_WORDS' \
+	'-DAES_ASM' \
+	'-DGHASH_ASM' \
+	'-DSHA1_ASM' \
+	'-DSHA256_ASM' \
+	'-DSHA512_ASM' \
+	'-DMD5_ASM' \
+	'-DDES_PTR' \
+	'-DDES_RISC1' \
+	'-DDES_UNROLL' \
+	'-DOPENSSL_CPUID_OBJ' \
 	'-DANDROID' \
 	'-D__GNU_SOURCE=1' \
 	'-DUSE_STLPORT=1' \
@@ -656,7 +668,6 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto/asn1 \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto/evp \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto/modes \
-	$(LOCAL_PATH)/third_party/openssl/config/android \
 	$(LOCAL_PATH)/third_party/openssl/openssl/include \
 	$(GYP_ABS_ANDROID_TOP_DIR)/frameworks/wilhelm/include \
 	$(GYP_ABS_ANDROID_TOP_DIR)/bionic \

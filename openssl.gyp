@@ -6,7 +6,7 @@
   'targets': [
     {
       'target_name': 'openssl',
-      'type': 'static_library',
+      'type': '<(component)',
       'includes': [
         # Include the auto-generated gypi file.
         '../../third_party/openssl/openssl.gypi'
@@ -65,6 +65,13 @@
             # Ensure the 64-bit opensslconf.h header is used.
             'openssl_include_dirs+': [ 'config/x64' ],
           },
+        }],
+        ['component == "shared_library"', {
+          'conditions': [
+            ['os_posix == 1 and OS != "mac" and OS != "ios"', {
+              'cflags!': ['-fvisibility=hidden'],
+            }],
+          ],
         }],
         ['clang==1', {
           'cflags': [

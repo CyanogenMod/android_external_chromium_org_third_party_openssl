@@ -6,7 +6,7 @@
   'targets': [
     {
       'target_name': 'openssl',
-      'type': '<(component)',
+      'type': 'static_library',
       'includes': [
         # Include the auto-generated gypi file.
         '../../third_party/openssl/openssl.gypi'
@@ -66,12 +66,12 @@
             'openssl_include_dirs+': [ 'config/x64' ],
           },
         }],
-        ['component == "shared_library"', {
-          'conditions': [
-            ['os_posix == 1 and OS != "mac" and OS != "ios"', {
-              'cflags!': ['-fvisibility=hidden'],
-            }],
-          ],
+        ['component == "shared_library" and OS=="android"', {
+          # On Android, build OpenSSL as a component. This is necessary as both
+          # crypto and net call into OpenSSL but it initializes some static
+          # state only once. However, this fails to compile on linux.
+          'type': 'shared_library',
+          'cflags!': ['-fvisibility=hidden'],
         }],
         ['clang==1', {
           'cflags': [

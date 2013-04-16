@@ -698,9 +698,9 @@ LOCAL_LDFLAGS := \
 	-nostdlib \
 	-Wl,--no-undefined \
 	-Wl,--exclude-libs=ALL \
+	-Wl,--gc-sections \
 	-Wl,-O1 \
-	-Wl,--as-needed \
-	-Wl,--gc-sections
+	-Wl,--as-needed
 
 
 LOCAL_STATIC_LIBRARIES :=

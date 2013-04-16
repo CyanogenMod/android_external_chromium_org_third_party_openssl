@@ -66,6 +66,13 @@
             'openssl_include_dirs+': [ 'config/x64' ],
           },
         }],
+        ['component == "shared_library" and OS=="android"', {
+          # On Android, build OpenSSL as a component. This is necessary as both
+          # crypto and net call into OpenSSL but it initializes some static
+          # state only once. However, this fails to compile on linux.
+          'type': 'shared_library',
+          'cflags!': ['-fvisibility=hidden'],
+        }],
         ['clang==1', {
           'cflags': [
             # OpenSSL has a few |if ((foo == NULL))| checks.

@@ -576,6 +576,23 @@
       'SHA256_ASM',
       'SHA512_ASM',
     ],
+    'openssl_mips_source_excludes': [
+      'openssl/crypto/aes/aes_core.c',
+      'openssl/crypto/bn/bn_asm.c',
+    ],
+    'openssl_mips_sources': [
+      'openssl/crypto/aes/asm/aes-mips.S',
+      'openssl/crypto/bn/asm/bn-mips.S',
+      'openssl/crypto/bn/asm/mips-mont.S',
+      'openssl/crypto/sha/asm/sha1-mips.S',
+      'openssl/crypto/sha/asm/sha256-mips.S',
+    ],
+    'openssl_mips_defines': [
+      'OPENSSL_BN_ASM_MONT',
+      'AES_ASM',
+      'SHA1_ASM',
+      'SHA256_ASM',
+    ],
     'openssl_x86_source_excludes': [
       'openssl/crypto/aes/aes_core.c',
       'openssl/crypto/aes/aes_cbc.c',

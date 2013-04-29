@@ -50,6 +50,12 @@
           'defines': [ '<@(openssl_arm_defines)' ],
           'defines!': [ 'OPENSSL_NO_ASM' ],
         }],
+        ['target_arch == "mipsel"', {
+          'sources': [ '<@(openssl_mips_sources)' ],
+          'sources!': [ '<@(openssl_mips_source_excludes)' ],
+          'defines': [ '<@(openssl_mips_defines)' ],
+          'defines!': [ 'OPENSSL_NO_ASM' ],
+        }],
         ['target_arch == "ia32"', {
           'sources': [ '<@(openssl_x86_sources)' ],
           'sources!': [ '<@(openssl_x86_source_excludes)' ],

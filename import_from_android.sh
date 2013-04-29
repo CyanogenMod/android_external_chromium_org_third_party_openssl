@@ -402,7 +402,7 @@ generate_gyp_file () {
   echo "# See 'import_from_android.sh --help' for details."
 
   local ALL_PREFIXES="OPENSSL_CRYPTO OPENSSL_SSL"
-  local ALL_ARCHS="arm x86 x86_64"
+  local ALL_ARCHS="arm mips x86 x86_64"
   local PREFIX ARCH LIST
 
   print_gyp "{"

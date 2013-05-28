@@ -669,9 +669,9 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto/evp \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto/modes \
 	$(LOCAL_PATH)/third_party/openssl/openssl/include \
-	$(GYP_ABS_ANDROID_TOP_DIR)/frameworks/wilhelm/include \
-	$(GYP_ABS_ANDROID_TOP_DIR)/bionic \
-	$(GYP_ABS_ANDROID_TOP_DIR)/external/stlport/stlport
+	$(PWD)/frameworks/wilhelm/include \
+	$(PWD)/bionic \
+	$(PWD)/external/stlport/stlport
 
 LOCAL_C_INCLUDES := $(GYP_COPIED_SOURCE_ORIGIN_DIRS) $(LOCAL_C_INCLUDES)
 

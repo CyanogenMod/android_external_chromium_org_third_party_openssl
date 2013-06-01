@@ -638,8 +638,10 @@
     'openssl_x86_64_source_excludes': [
       'openssl/crypto/aes/aes_cbc.c',
       'openssl/crypto/aes/aes_core.c',
+      'openssl/crypto/bn/bn_asm.c',
       'openssl/crypto/mem_clr.c',
       'openssl/crypto/rc4/rc4_enc.c',
+      'openssl/crypto/rc4/rc4_skey.c',
     ],
     'openssl_x86_64_sources': [
       'openssl/crypto/aes/asm/aes-x86_64.S',

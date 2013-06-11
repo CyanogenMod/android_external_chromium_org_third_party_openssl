@@ -172,6 +172,10 @@ located in patches.chromium/. Currently this consists of:
     Enable DTLSv1, which is disabled by default in the Android platform
     configuration.
 
+  x86_64_source_excludes.patch
+    Exclude the source files bn_asm.c and rc4_skey.c for x86_64 because
+    they are replaced by x86_64-gcc.c and rc4-x86_64.S.
+
 **************************************************************************
 Adding new Chromium patches:
 

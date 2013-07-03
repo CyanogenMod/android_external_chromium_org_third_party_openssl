@@ -789,7 +789,6 @@ LOCAL_LDFLAGS_Debug := \
 	-Wl,--exclude-libs=ALL \
 	-Wl,--icf=safe \
 	-Wl,--gc-sections \
-	-Wl,--warn-shared-textrel \
 	-Wl,-O1 \
 	-Wl,--as-needed
 
@@ -808,8 +807,7 @@ LOCAL_LDFLAGS_Release := \
 	-Wl,--icf=safe \
 	-Wl,-O1 \
 	-Wl,--as-needed \
-	-Wl,--gc-sections \
-	-Wl,--warn-shared-textrel
+	-Wl,--gc-sections
 
 
 LOCAL_LDFLAGS := $(LOCAL_LDFLAGS_$(GYP_CONFIGURATION))

@@ -176,6 +176,10 @@ located in patches.chromium/. Currently this consists of:
     Exclude the source files bn_asm.c and rc4_skey.c for x86_64 because
     they are replaced by x86_64-gcc.c and rc4-x86_64.S.
 
+  z_reduce_client_hello_size.patch
+    Advertise support of only the NIST curves P-521, P-384, and P-256,
+    as well as only uncompressed points, to keep ClientHello small.
+
 **************************************************************************
 Adding new Chromium patches:
 

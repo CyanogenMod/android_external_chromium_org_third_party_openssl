@@ -1,0 +1,196 @@
+diff -burN android-openssl.orig/crypto/bio/bio.h android-openssl/crypto/bio/bio.h
+--- android-openssl.orig/crypto/bio/bio.h	2013-10-18 16:41:41.052291400 +0200
++++ android-openssl/crypto/bio/bio.h	2013-10-18 16:42:58.772982447 +0200
+@@ -266,6 +266,8 @@
+ #define BIO_RR_CONNECT			0x02
+ /* Returned from the accept BIO when an accept would have blocked */
+ #define BIO_RR_ACCEPT			0x03
++/* Returned from the SSL bio when the channel id retrieval code cannot find the
++ * private key. */
++#define BIO_RR_SSL_CHANNEL_ID_LOOKUP	0x04
+ 
+ /* These are passed by the BIO callback */
+ #define BIO_CB_FREE	0x01
+diff -burN android-openssl.orig/include/openssl/bio.h android-openssl/include/openssl/bio.h
+--- android-openssl.orig/include/openssl/bio.h	2013-10-18 16:41:41.162292378 +0200
++++ android-openssl/include/openssl/bio.h	2013-10-18 16:42:58.772982447 +0200
+@@ -266,6 +266,9 @@
+ #define BIO_RR_CONNECT			0x02
+ /* Returned from the accept BIO when an accept would have blocked */
+ #define BIO_RR_ACCEPT			0x03
++/* Returned from the SSL bio when the channel id retrieval code cannot find the
++ * private key. */
++#define BIO_RR_SSL_CHANNEL_ID_LOOKUP	0x04
+ 
+ /* These are passed by the BIO callback */
+ #define BIO_CB_FREE	0x01
+diff -burN android-openssl.orig/include/openssl/ssl.h android-openssl/include/openssl/ssl.h
+--- android-openssl.orig/include/openssl/ssl.h	2013-10-18 16:41:41.252293178 +0200
++++ android-openssl/include/openssl/ssl.h	2013-10-18 16:42:58.772982447 +0200
+@@ -1104,12 +1104,14 @@
+ #define SSL_WRITING	2
+ #define SSL_READING	3
+ #define SSL_X509_LOOKUP	4
++#define SSL_CHANNEL_ID_LOOKUP	5
+ 
+ /* These will only be used when doing non-blocking IO */
+ #define SSL_want_nothing(s)	(SSL_want(s) == SSL_NOTHING)
+ #define SSL_want_read(s)	(SSL_want(s) == SSL_READING)
+ #define SSL_want_write(s)	(SSL_want(s) == SSL_WRITING)
+ #define SSL_want_x509_lookup(s)	(SSL_want(s) == SSL_X509_LOOKUP)
++#define SSL_want_channel_id_lookup(s)	(SSL_want(s) == SSL_CHANNEL_ID_LOOKUP)
+ 
+ #define SSL_MAC_FLAG_READ_MAC_STREAM 1
+ #define SSL_MAC_FLAG_WRITE_MAC_STREAM 2
+@@ -1535,6 +1537,7 @@
+ #define SSL_ERROR_ZERO_RETURN		6
+ #define SSL_ERROR_WANT_CONNECT		7
+ #define SSL_ERROR_WANT_ACCEPT		8
++#define SSL_ERROR_WANT_CHANNEL_ID_LOOKUP	9
+ 
+ #define SSL_CTRL_NEED_TMP_RSA			1
+ #define SSL_CTRL_SET_TMP_RSA			2
+@@ -1672,10 +1675,11 @@
+ #define SSL_set_tmp_ecdh(ssl,ecdh) \
+ 	SSL_ctrl(ssl,SSL_CTRL_SET_TMP_ECDH,0,(char *)ecdh)
+ 
+-/* SSL_enable_tls_channel_id configures a TLS server to accept TLS client
+- * IDs from clients. Returns 1 on success. */
+-#define SSL_enable_tls_channel_id(ctx) \
+-	SSL_ctrl(ctx,SSL_CTRL_CHANNEL_ID,0,NULL)
++/* SSL_enable_tls_channel_id either configures a TLS server to accept TLS client
++ * IDs from clients, or configure a client to send TLS client IDs to server.
++ * Returns 1 on success. */
++#define SSL_enable_tls_channel_id(s) \
++	SSL_ctrl(s,SSL_CTRL_CHANNEL_ID,0,NULL)
+ /* SSL_set1_tls_channel_id configures a TLS client to send a TLS Channel ID to
+  * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
+  * success. */
+diff -burN android-openssl.orig/ssl/bio_ssl.c android-openssl/ssl/bio_ssl.c
+--- android-openssl.orig/ssl/bio_ssl.c	2013-10-18 16:41:41.172292466 +0200
++++ android-openssl/ssl/bio_ssl.c	2013-10-18 16:42:58.772982447 +0200
+@@ -206,6 +206,10 @@
+ 		BIO_set_retry_special(b);
+ 		retry_reason=BIO_RR_SSL_X509_LOOKUP;
+ 		break;
++	case SSL_ERROR_WANT_CHANNEL_ID_LOOKUP:
++		BIO_set_retry_special(b);
++		retry_reason=BIO_RR_SSL_CHANNEL_ID_LOOKUP;
++		break;
+ 	case SSL_ERROR_WANT_ACCEPT:
+ 		BIO_set_retry_special(b);
+ 		retry_reason=BIO_RR_ACCEPT;
+@@ -280,6 +284,10 @@
+ 		BIO_set_retry_special(b);
+ 		retry_reason=BIO_RR_SSL_X509_LOOKUP;
+ 		break;
++	case SSL_ERROR_WANT_CHANNEL_ID_LOOKUP:
++		BIO_set_retry_special(b);
++		retry_reason=BIO_RR_SSL_CHANNEL_ID_LOOKUP;
++		break;
+ 	case SSL_ERROR_WANT_CONNECT:
+ 		BIO_set_retry_special(b);
+ 		retry_reason=BIO_RR_CONNECT;
+diff -burN android-openssl.orig/ssl/s3_clnt.c android-openssl/ssl/s3_clnt.c
+--- android-openssl.orig/ssl/s3_clnt.c	2013-10-18 16:41:41.262293266 +0200
++++ android-openssl/ssl/s3_clnt.c	2013-10-18 16:42:58.772982447 +0200
+@@ -3414,6 +3414,13 @@
+ 	if (s->state != SSL3_ST_CW_CHANNEL_ID_A)
+ 		return ssl3_do_write(s, SSL3_RT_HANDSHAKE);
+ 
++        if (s->tlsext_channel_id_private == NULL)
++            {
++                s->rwstate=SSL_CHANNEL_ID_LOOKUP;
++                return (-1);
++            }
++        s->rwstate=SSL_NOTHING;
++
+ 	d = (unsigned char *)s->init_buf->data;
+ 	*(d++)=SSL3_MT_ENCRYPTED_EXTENSIONS;
+ 	l2n3(2 + 2 + TLSEXT_CHANNEL_ID_SIZE, d);
+diff -burN android-openssl.orig/ssl/s3_lib.c android-openssl/ssl/s3_lib.c
+--- android-openssl.orig/ssl/s3_lib.c	2013-10-18 16:41:41.262293266 +0200
++++ android-openssl/ssl/s3_lib.c	2013-10-18 16:42:58.772982447 +0200
+@@ -3358,8 +3358,6 @@
+ 		break;
+ #endif
+ 	case SSL_CTRL_CHANNEL_ID:
+-		if (!s->server)
+-			break;
+ 		s->tlsext_channel_id_enabled = 1;
+ 		ret = 1;
+ 		break;
+@@ -3375,7 +3373,7 @@
+ 			}
+ 		if (s->tlsext_channel_id_private)
+ 			EVP_PKEY_free(s->tlsext_channel_id_private);
+-		s->tlsext_channel_id_private = (EVP_PKEY*) parg;
++		s->tlsext_channel_id_private = EVP_PKEY_dup((EVP_PKEY*) parg);
+ 		ret = 1;
+ 		break;
+ 
+@@ -3690,7 +3688,7 @@
+ 			}
+ 		if (ctx->tlsext_channel_id_private)
+ 			EVP_PKEY_free(ctx->tlsext_channel_id_private);
+-		ctx->tlsext_channel_id_private = (EVP_PKEY*) parg;
++		ctx->tlsext_channel_id_private = EVP_PKEY_dup((EVP_PKEY*) parg);
+ 		break;
+ 
+ 	default:
+diff -burN android-openssl.orig/ssl/ssl.h android-openssl/ssl/ssl.h
+--- android-openssl.orig/ssl/ssl.h	2013-10-18 16:41:41.262293266 +0200
++++ android-openssl/ssl/ssl.h	2013-10-18 16:42:58.772982447 +0200
+@@ -1104,12 +1104,14 @@
+ #define SSL_WRITING	2
+ #define SSL_READING	3
+ #define SSL_X509_LOOKUP	4
++#define SSL_CHANNEL_ID_LOOKUP	5
+ 
+ /* These will only be used when doing non-blocking IO */
+ #define SSL_want_nothing(s)	(SSL_want(s) == SSL_NOTHING)
+ #define SSL_want_read(s)	(SSL_want(s) == SSL_READING)
+ #define SSL_want_write(s)	(SSL_want(s) == SSL_WRITING)
+ #define SSL_want_x509_lookup(s)	(SSL_want(s) == SSL_X509_LOOKUP)
++#define SSL_want_channel_id_lookup(s)	(SSL_want(s) == SSL_CHANNEL_ID_LOOKUP)
+ 
+ #define SSL_MAC_FLAG_READ_MAC_STREAM 1
+ #define SSL_MAC_FLAG_WRITE_MAC_STREAM 2
+@@ -1535,6 +1537,7 @@
+ #define SSL_ERROR_ZERO_RETURN		6
+ #define SSL_ERROR_WANT_CONNECT		7
+ #define SSL_ERROR_WANT_ACCEPT		8
++#define SSL_ERROR_WANT_CHANNEL_ID_LOOKUP	9
+ 
+ #define SSL_CTRL_NEED_TMP_RSA			1
+ #define SSL_CTRL_SET_TMP_RSA			2
+@@ -1672,10 +1675,11 @@
+ #define SSL_set_tmp_ecdh(ssl,ecdh) \
+ 	SSL_ctrl(ssl,SSL_CTRL_SET_TMP_ECDH,0,(char *)ecdh)
+ 
+-/* SSL_enable_tls_channel_id configures a TLS server to accept TLS client
+- * IDs from clients. Returns 1 on success. */
+-#define SSL_enable_tls_channel_id(ctx) \
+-	SSL_ctrl(ctx,SSL_CTRL_CHANNEL_ID,0,NULL)
++/* SSL_enable_tls_channel_id either configures a TLS server to accept TLS client
++ * IDs from clients, or configure a client to send TLS client IDs to server.
++ * Returns 1 on success. */
++#define SSL_enable_tls_channel_id(s) \
++	SSL_ctrl(s,SSL_CTRL_CHANNEL_ID,0,NULL)
+ /* SSL_set1_tls_channel_id configures a TLS client to send a TLS Channel ID to
+  * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
+  * success. */
+diff -burN android-openssl.orig/ssl/ssl_lib.c android-openssl/ssl/ssl_lib.c
+--- android-openssl.orig/ssl/ssl_lib.c	2013-10-18 16:41:41.262293266 +0200
++++ android-openssl/ssl/ssl_lib.c	2013-10-18 16:42:58.772982447 +0200
+@@ -2561,6 +2561,10 @@
+ 		{
+ 		return(SSL_ERROR_WANT_X509_LOOKUP);
+ 		}
++	if ((i < 0) && SSL_want_channel_id_lookup(s))
++		{
++		return(SSL_ERROR_WANT_CHANNEL_ID_LOOKUP);
++		}
+ 
+ 	if (i == 0)
+ 		{

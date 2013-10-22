@@ -339,7 +339,7 @@ dump "Checking content of downloaded package: ok"
 #
 dump "Saving .svn subdirectories"
 SAVED_SVN_TARBALL=$BUILD_DIR/saved-svn-subdirs.tar.gz
-run tar czf $SAVED_SVN_TARBALL $(find . -type d -name ".svn")
+#run tar czf $SAVED_SVN_TARBALL $(find . -type d -name ".svn")
 
 # Re-run the import_openssl.sh script.
 dump "Re-running the 'import_openssl.sh' script to reconfigure all sources."
@@ -360,7 +360,7 @@ run mv "$PROGDIR/openssl.new" "$PROGDIR/openssl"
 run rm -rf "$PROGDIR/openssl.old"
 
 dump "Restoring .svn subdirectores"
-run tar xzf $SAVED_SVN_TARBALL
+# run tar xzf $SAVED_SVN_TARBALL
 
 # Extract list of source files or compiler defines from openssl.config
 # variable definition. This assumes that the lists are in variables that

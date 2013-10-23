@@ -1,7 +1,7 @@
 diff -burN android-openssl.orig/crypto/bio/bio.h android-openssl/crypto/bio/bio.h
---- android-openssl.orig/crypto/bio/bio.h	2013-10-18 16:41:41.052291400 +0200
-+++ android-openssl/crypto/bio/bio.h	2013-10-18 16:42:58.772982447 +0200
-@@ -266,6 +266,8 @@
+--- android-openssl.orig/crypto/bio/bio.h	2013-02-11 16:26:04.000000000 +0100
++++ android-openssl/crypto/bio/bio.h	2013-10-22 18:22:42.080337200 +0200
+@@ -266,6 +266,9 @@
  #define BIO_RR_CONNECT			0x02
  /* Returned from the accept BIO when an accept would have blocked */
  #define BIO_RR_ACCEPT			0x03
@@ -12,8 +12,8 @@ diff -burN android-openssl.orig/crypto/bio/bio.h android-openssl/crypto/bio/bio.
  /* These are passed by the BIO callback */
  #define BIO_CB_FREE	0x01
 diff -burN android-openssl.orig/include/openssl/bio.h android-openssl/include/openssl/bio.h
---- android-openssl.orig/include/openssl/bio.h	2013-10-18 16:41:41.162292378 +0200
-+++ android-openssl/include/openssl/bio.h	2013-10-18 16:42:58.772982447 +0200
+--- android-openssl.orig/include/openssl/bio.h	2013-10-22 18:20:42.249270230 +0200
++++ android-openssl/include/openssl/bio.h	2013-10-22 18:22:42.080337200 +0200
 @@ -266,6 +266,9 @@
  #define BIO_RR_CONNECT			0x02
  /* Returned from the accept BIO when an accept would have blocked */
@@ -25,9 +25,28 @@ diff -burN android-openssl.orig/include/openssl/bio.h android-openssl/include/op
  /* These are passed by the BIO callback */
  #define BIO_CB_FREE	0x01
 diff -burN android-openssl.orig/include/openssl/ssl.h android-openssl/include/openssl/ssl.h
---- android-openssl.orig/include/openssl/ssl.h	2013-10-18 16:41:41.252293178 +0200
-+++ android-openssl/include/openssl/ssl.h	2013-10-18 16:42:58.772982447 +0200
-@@ -1104,12 +1104,14 @@
+--- android-openssl.orig/include/openssl/ssl.h	2013-10-22 18:20:42.259270320 +0200
++++ android-openssl/include/openssl/ssl.h	2013-10-22 18:24:14.771162612 +0200
+@@ -848,6 +848,9 @@
+ 	/* get client cert callback */
+ 	int (*client_cert_cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
+ 
++	/* get channel id callback */
++	void (*channel_id_cb)(SSL *ssl, EVP_PKEY **pkey);
++
+     /* cookie generate callback */
+     int (*app_gen_cookie_cb)(SSL *ssl, unsigned char *cookie, 
+         unsigned int *cookie_len);
+@@ -1043,6 +1046,8 @@
+ void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(const SSL *ssl,int type,int val);
+ void SSL_CTX_set_client_cert_cb(SSL_CTX *ctx, int (*client_cert_cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey));
+ int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
++void SSL_CTX_set_channel_id_cb(SSL_CTX *ctx, void (*channel_id_cb)(SSL *ssl, EVP_PKEY **pkey));
++void (*SSL_CTX_get_channel_id_cb(SSL_CTX *ctx))(SSL *ssl, EVP_PKEY **pkey);
+ #ifndef OPENSSL_NO_ENGINE
+ int SSL_CTX_set_client_cert_engine(SSL_CTX *ctx, ENGINE *e);
+ #endif
+@@ -1104,12 +1109,14 @@
  #define SSL_WRITING	2
  #define SSL_READING	3
  #define SSL_X509_LOOKUP	4
@@ -42,7 +61,7 @@ diff -burN android-openssl.orig/include/openssl/ssl.h android-openssl/include/op
  
  #define SSL_MAC_FLAG_READ_MAC_STREAM 1
  #define SSL_MAC_FLAG_WRITE_MAC_STREAM 2
-@@ -1535,6 +1537,7 @@
+@@ -1535,6 +1542,7 @@
  #define SSL_ERROR_ZERO_RETURN		6
  #define SSL_ERROR_WANT_CONNECT		7
  #define SSL_ERROR_WANT_ACCEPT		8
@@ -50,7 +69,7 @@ diff -burN android-openssl.orig/include/openssl/ssl.h android-openssl/include/op
  
  #define SSL_CTRL_NEED_TMP_RSA			1
  #define SSL_CTRL_SET_TMP_RSA			2
-@@ -1672,10 +1675,11 @@
+@@ -1672,10 +1680,11 @@
  #define SSL_set_tmp_ecdh(ssl,ecdh) \
  	SSL_ctrl(ssl,SSL_CTRL_SET_TMP_ECDH,0,(char *)ecdh)
  
@@ -67,8 +86,8 @@ diff -burN android-openssl.orig/include/openssl/ssl.h android-openssl/include/op
   * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
   * success. */
 diff -burN android-openssl.orig/ssl/bio_ssl.c android-openssl/ssl/bio_ssl.c
---- android-openssl.orig/ssl/bio_ssl.c	2013-10-18 16:41:41.172292466 +0200
-+++ android-openssl/ssl/bio_ssl.c	2013-10-18 16:42:58.772982447 +0200
+--- android-openssl.orig/ssl/bio_ssl.c	2013-02-11 16:26:04.000000000 +0100
++++ android-openssl/ssl/bio_ssl.c	2013-10-22 18:22:42.090337290 +0200
 @@ -206,6 +206,10 @@
  		BIO_set_retry_special(b);
  		retry_reason=BIO_RR_SSL_X509_LOOKUP;
@@ -92,25 +111,34 @@ diff -burN android-openssl.orig/ssl/bio_ssl.c android-openssl/ssl/bio_ssl.c
  		BIO_set_retry_special(b);
  		retry_reason=BIO_RR_CONNECT;
 diff -burN android-openssl.orig/ssl/s3_clnt.c android-openssl/ssl/s3_clnt.c
---- android-openssl.orig/ssl/s3_clnt.c	2013-10-18 16:41:41.262293266 +0200
-+++ android-openssl/ssl/s3_clnt.c	2013-10-18 16:42:58.772982447 +0200
-@@ -3414,6 +3414,13 @@
+--- android-openssl.orig/ssl/s3_clnt.c	2013-10-22 18:20:40.289252781 +0200
++++ android-openssl/ssl/s3_clnt.c	2013-10-22 18:22:42.090337290 +0200
+@@ -3414,6 +3414,22 @@
  	if (s->state != SSL3_ST_CW_CHANNEL_ID_A)
  		return ssl3_do_write(s, SSL3_RT_HANDSHAKE);
  
-+        if (s->tlsext_channel_id_private == NULL)
-+            {
-+                s->rwstate=SSL_CHANNEL_ID_LOOKUP;
-+                return (-1);
-+            }
-+        s->rwstate=SSL_NOTHING;
++	if (!s->tlsext_channel_id_private && s->ctx->channel_id_cb)
++		{
++		EVP_PKEY* key = NULL;
++		s->ctx->channel_id_cb(s, &key);
++		if (key != NULL)
++			{
++			s->tlsext_channel_id_private = key;
++			}
++		}
++	if (!s->tlsext_channel_id_private)
++		{
++		s->rwstate=SSL_CHANNEL_ID_LOOKUP;
++		return (-1);
++		}
++	s->rwstate=SSL_NOTHING;
 +
  	d = (unsigned char *)s->init_buf->data;
  	*(d++)=SSL3_MT_ENCRYPTED_EXTENSIONS;
  	l2n3(2 + 2 + TLSEXT_CHANNEL_ID_SIZE, d);
 diff -burN android-openssl.orig/ssl/s3_lib.c android-openssl/ssl/s3_lib.c
---- android-openssl.orig/ssl/s3_lib.c	2013-10-18 16:41:41.262293266 +0200
-+++ android-openssl/ssl/s3_lib.c	2013-10-18 16:42:58.772982447 +0200
+--- android-openssl.orig/ssl/s3_lib.c	2013-10-22 18:20:40.289252781 +0200
++++ android-openssl/ssl/s3_lib.c	2013-10-22 18:22:42.090337290 +0200
 @@ -3358,8 +3358,6 @@
  		break;
  #endif
@@ -139,9 +167,28 @@ diff -burN android-openssl.orig/ssl/s3_lib.c android-openssl/ssl/s3_lib.c
  
  	default:
 diff -burN android-openssl.orig/ssl/ssl.h android-openssl/ssl/ssl.h
---- android-openssl.orig/ssl/ssl.h	2013-10-18 16:41:41.262293266 +0200
-+++ android-openssl/ssl/ssl.h	2013-10-18 16:42:58.772982447 +0200
-@@ -1104,12 +1104,14 @@
+--- android-openssl.orig/ssl/ssl.h	2013-10-22 18:20:40.299252871 +0200
++++ android-openssl/ssl/ssl.h	2013-10-22 18:24:24.121245879 +0200
+@@ -848,6 +848,9 @@
+ 	/* get client cert callback */
+ 	int (*client_cert_cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
+ 
++	/* get channel id callback */
++	void (*channel_id_cb)(SSL *ssl, EVP_PKEY **pkey);
++
+     /* cookie generate callback */
+     int (*app_gen_cookie_cb)(SSL *ssl, unsigned char *cookie, 
+         unsigned int *cookie_len);
+@@ -1043,6 +1046,8 @@
+ void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(const SSL *ssl,int type,int val);
+ void SSL_CTX_set_client_cert_cb(SSL_CTX *ctx, int (*client_cert_cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey));
+ int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
++void SSL_CTX_set_channel_id_cb(SSL_CTX *ctx, void (*channel_id_cb)(SSL *ssl, EVP_PKEY **pkey));
++void (*SSL_CTX_get_channel_id_cb(SSL_CTX *ctx))(SSL *ssl, EVP_PKEY **pkey);
+ #ifndef OPENSSL_NO_ENGINE
+ int SSL_CTX_set_client_cert_engine(SSL_CTX *ctx, ENGINE *e);
+ #endif
+@@ -1104,12 +1109,14 @@
  #define SSL_WRITING	2
  #define SSL_READING	3
  #define SSL_X509_LOOKUP	4
@@ -156,7 +203,7 @@ diff -burN android-openssl.orig/ssl/ssl.h android-openssl/ssl/ssl.h
  
  #define SSL_MAC_FLAG_READ_MAC_STREAM 1
  #define SSL_MAC_FLAG_WRITE_MAC_STREAM 2
-@@ -1535,6 +1537,7 @@
+@@ -1535,6 +1542,7 @@
  #define SSL_ERROR_ZERO_RETURN		6
  #define SSL_ERROR_WANT_CONNECT		7
  #define SSL_ERROR_WANT_ACCEPT		8
@@ -164,7 +211,7 @@ diff -burN android-openssl.orig/ssl/ssl.h android-openssl/ssl/ssl.h
  
  #define SSL_CTRL_NEED_TMP_RSA			1
  #define SSL_CTRL_SET_TMP_RSA			2
-@@ -1672,10 +1675,11 @@
+@@ -1672,10 +1680,11 @@
  #define SSL_set_tmp_ecdh(ssl,ecdh) \
  	SSL_ctrl(ssl,SSL_CTRL_SET_TMP_ECDH,0,(char *)ecdh)
  
@@ -181,8 +228,8 @@ diff -burN android-openssl.orig/ssl/ssl.h android-openssl/ssl/ssl.h
   * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
   * success. */
 diff -burN android-openssl.orig/ssl/ssl_lib.c android-openssl/ssl/ssl_lib.c
---- android-openssl.orig/ssl/ssl_lib.c	2013-10-18 16:41:41.262293266 +0200
-+++ android-openssl/ssl/ssl_lib.c	2013-10-18 16:42:58.772982447 +0200
+--- android-openssl.orig/ssl/ssl_lib.c	2013-10-22 18:20:40.299252871 +0200
++++ android-openssl/ssl/ssl_lib.c	2013-10-22 18:22:42.090337290 +0200
 @@ -2561,6 +2561,10 @@
  		{
  		return(SSL_ERROR_WANT_X509_LOOKUP);
@@ -194,3 +241,24 @@ diff -burN android-openssl.orig/ssl/ssl_lib.c android-openssl/ssl/ssl_lib.c
  
  	if (i == 0)
  		{
+diff -burN android-openssl.orig/ssl/ssl_sess.c android-openssl/ssl/ssl_sess.c
+--- android-openssl.orig/ssl/ssl_sess.c	2013-10-22 18:20:40.289252781 +0200
++++ android-openssl/ssl/ssl_sess.c	2013-10-22 18:22:42.090337290 +0200
+@@ -1132,6 +1132,17 @@
+ 	return ctx->client_cert_cb;
+ 	}
+ 
++void SSL_CTX_set_channel_id_cb(SSL_CTX *ctx,
++	void (*cb)(SSL *ssl, EVP_PKEY **pkey))
++	{
++	ctx->channel_id_cb=cb;
++	}
++
++void (*SSL_CTX_get_channel_id_cb(SSL_CTX *ctx))(SSL * ssl, EVP_PKEY **pkey)
++	{
++	return ctx->channel_id_cb;
++	}
++
+ #ifndef OPENSSL_NO_ENGINE
+ int SSL_CTX_set_client_cert_engine(SSL_CTX *ctx, ENGINE *e)
+ 	{

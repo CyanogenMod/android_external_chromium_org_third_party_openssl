@@ -3416,7 +3416,7 @@ int ssl3_send_channel_id(SSL *s)
 
 	if (!s->tlsext_channel_id_private && s->ctx->channel_id_cb)
 		{
-		EVP_PKEY* key = NULL;
+		EVP_PKEY *key = NULL;
 		s->ctx->channel_id_cb(s, &key);
 		if (key != NULL)
 			{

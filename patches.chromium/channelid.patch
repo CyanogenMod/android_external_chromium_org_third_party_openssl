@@ -119,7 +119,7 @@ diff -burN android-openssl.orig/ssl/s3_clnt.c android-openssl/ssl/s3_clnt.c
  
 +	if (!s->tlsext_channel_id_private && s->ctx->channel_id_cb)
 +		{
-+		EVP_PKEY* key = NULL;
++		EVP_PKEY *key = NULL;
 +		s->ctx->channel_id_cb(s, &key);
 +		if (key != NULL)
 +			{

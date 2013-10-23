@@ -2561,6 +2561,10 @@ int SSL_get_error(const SSL *s,int i)
 		{
 		return(SSL_ERROR_WANT_X509_LOOKUP);
 		}
+	if ((i < 0) && SSL_want_channel_id_lookup(s))
+		{
+		return(SSL_ERROR_WANT_CHANNEL_ID_LOOKUP);
+		}
 
 	if (i == 0)
 		{

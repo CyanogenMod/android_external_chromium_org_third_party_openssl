@@ -180,6 +180,10 @@ located in patches.chromium/. Currently this consists of:
     Advertise support of only the NIST curves P-521, P-384, and P-256,
     as well as only uncompressed points, to keep ClientHello small.
 
+  channelid.patch
+    Add API so that channel ID private key can be set only after verifying the
+    remote server supports channel IDs.
+
 **************************************************************************
 Adding new Chromium patches:
 

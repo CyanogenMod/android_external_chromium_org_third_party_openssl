@@ -78,10 +78,10 @@ diff -burN android-openssl.orig/include/openssl/ssl.h android-openssl/include/op
 -#define SSL_enable_tls_channel_id(ctx) \
 -	SSL_ctrl(ctx,SSL_CTRL_CHANNEL_ID,0,NULL)
 +/* SSL_enable_tls_channel_id either configures a TLS server to accept TLS client
-+ * IDs from clients, or configure a client to send TLS client IDs to server.
++ * IDs from clients, or configures a client to send TLS client IDs to server.
 + * Returns 1 on success. */
-+#define SSL_enable_tls_channel_id(s) \
-+	SSL_ctrl(s,SSL_CTRL_CHANNEL_ID,0,NULL)
++#define SSL_enable_tls_channel_id(ssl) \
++	SSL_ctrl(ssl,SSL_CTRL_CHANNEL_ID,0,NULL)
  /* SSL_set1_tls_channel_id configures a TLS client to send a TLS Channel ID to
   * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
   * success. */
@@ -220,10 +220,10 @@ diff -burN android-openssl.orig/ssl/ssl.h android-openssl/ssl/ssl.h
 -#define SSL_enable_tls_channel_id(ctx) \
 -	SSL_ctrl(ctx,SSL_CTRL_CHANNEL_ID,0,NULL)
 +/* SSL_enable_tls_channel_id either configures a TLS server to accept TLS client
-+ * IDs from clients, or configure a client to send TLS client IDs to server.
++ * IDs from clients, or configures a client to send TLS client IDs to server.
 + * Returns 1 on success. */
-+#define SSL_enable_tls_channel_id(s) \
-+	SSL_ctrl(s,SSL_CTRL_CHANNEL_ID,0,NULL)
++#define SSL_enable_tls_channel_id(ssl) \
++	SSL_ctrl(ssl,SSL_CTRL_CHANNEL_ID,0,NULL)
  /* SSL_set1_tls_channel_id configures a TLS client to send a TLS Channel ID to
   * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
   * success. */

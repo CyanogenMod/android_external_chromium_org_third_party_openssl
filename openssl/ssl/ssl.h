@@ -1681,10 +1681,10 @@ DECLARE_PEM_rw(SSL_SESSION, SSL_SESSION)
 	SSL_ctrl(ssl,SSL_CTRL_SET_TMP_ECDH,0,(char *)ecdh)
 
 /* SSL_enable_tls_channel_id either configures a TLS server to accept TLS client
- * IDs from clients, or configure a client to send TLS client IDs to server.
+ * IDs from clients, or configures a client to send TLS client IDs to server.
  * Returns 1 on success. */
-#define SSL_enable_tls_channel_id(s) \
-	SSL_ctrl(s,SSL_CTRL_CHANNEL_ID,0,NULL)
+#define SSL_enable_tls_channel_id(ssl) \
+	SSL_ctrl(ssl,SSL_CTRL_CHANNEL_ID,0,NULL)
 /* SSL_set1_tls_channel_id configures a TLS client to send a TLS Channel ID to
  * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
  * success. */

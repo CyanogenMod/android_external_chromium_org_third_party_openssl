@@ -848,6 +848,9 @@ struct ssl_ctx_st
 	/* get client cert callback */
 	int (*client_cert_cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
 
+	/* get channel id callback */
+	void (*channel_id_cb)(SSL *ssl, EVP_PKEY **pkey);
+
     /* cookie generate callback */
     int (*app_gen_cookie_cb)(SSL *ssl, unsigned char *cookie, 
         unsigned int *cookie_len);
@@ -1043,6 +1046,8 @@ void SSL_CTX_set_info_callback(SSL_CTX *ctx, void (*cb)(const SSL *ssl,int type,
 void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(const SSL *ssl,int type,int val);
 void SSL_CTX_set_client_cert_cb(SSL_CTX *ctx, int (*client_cert_cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey));
 int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
+void SSL_CTX_set_channel_id_cb(SSL_CTX *ctx, void (*channel_id_cb)(SSL *ssl, EVP_PKEY **pkey));
+void (*SSL_CTX_get_channel_id_cb(SSL_CTX *ctx))(SSL *ssl, EVP_PKEY **pkey);
 #ifndef OPENSSL_NO_ENGINE
 int SSL_CTX_set_client_cert_engine(SSL_CTX *ctx, ENGINE *e);
 #endif
@@ -1104,12 +1109,14 @@ const char *SSL_get_psk_identity(const SSL *s);
 #define SSL_WRITING	2
 #define SSL_READING	3
 #define SSL_X509_LOOKUP	4
+#define SSL_CHANNEL_ID_LOOKUP	5
 
 /* These will only be used when doing non-blocking IO */
 #define SSL_want_nothing(s)	(SSL_want(s) == SSL_NOTHING)
 #define SSL_want_read(s)	(SSL_want(s) == SSL_READING)
 #define SSL_want_write(s)	(SSL_want(s) == SSL_WRITING)
 #define SSL_want_x509_lookup(s)	(SSL_want(s) == SSL_X509_LOOKUP)
+#define SSL_want_channel_id_lookup(s)	(SSL_want(s) == SSL_CHANNEL_ID_LOOKUP)
 
 #define SSL_MAC_FLAG_READ_MAC_STREAM 1
 #define SSL_MAC_FLAG_WRITE_MAC_STREAM 2
@@ -1535,6 +1542,7 @@ DECLARE_PEM_rw(SSL_SESSION, SSL_SESSION)
 #define SSL_ERROR_ZERO_RETURN		6
 #define SSL_ERROR_WANT_CONNECT		7
 #define SSL_ERROR_WANT_ACCEPT		8
+#define SSL_ERROR_WANT_CHANNEL_ID_LOOKUP	9
 
 #define SSL_CTRL_NEED_TMP_RSA			1
 #define SSL_CTRL_SET_TMP_RSA			2
@@ -1672,10 +1680,11 @@ DECLARE_PEM_rw(SSL_SESSION, SSL_SESSION)
 #define SSL_set_tmp_ecdh(ssl,ecdh) \
 	SSL_ctrl(ssl,SSL_CTRL_SET_TMP_ECDH,0,(char *)ecdh)
 
-/* SSL_enable_tls_channel_id configures a TLS server to accept TLS client
- * IDs from clients. Returns 1 on success. */
-#define SSL_enable_tls_channel_id(ctx) \
-	SSL_ctrl(ctx,SSL_CTRL_CHANNEL_ID,0,NULL)
+/* SSL_enable_tls_channel_id either configures a TLS server to accept TLS client
+ * IDs from clients, or configures a client to send TLS client IDs to server.
+ * Returns 1 on success. */
+#define SSL_enable_tls_channel_id(ssl) \
+	SSL_ctrl(ssl,SSL_CTRL_CHANNEL_ID,0,NULL)
 /* SSL_set1_tls_channel_id configures a TLS client to send a TLS Channel ID to
  * compatible servers. private_key must be a P-256 EVP_PKEY*. Returns 1 on
  * success. */

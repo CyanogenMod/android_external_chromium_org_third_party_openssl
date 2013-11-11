@@ -558,10 +558,10 @@ arm_src_files := \
   crypto/aes/asm/aes-armv4.S \
   crypto/bn/asm/armv4-gf2m.S \
   crypto/bn/asm/armv4-mont.S \
-  crypto/chacha/chacha_vec_arm.s \
+  crypto/chacha/chacha_vec_arm.S \
   crypto/modes/asm/ghash-armv4.S \
   crypto/poly1305/poly1305_arm.c \
-  crypto/poly1305/poly1305_arm_asm.s \
+  crypto/poly1305/poly1305_arm_asm.S \
   crypto/sha/asm/sha1-armv4-large.S \
   crypto/sha/asm/sha256-armv4.S \
   crypto/sha/asm/sha512-armv4.S \

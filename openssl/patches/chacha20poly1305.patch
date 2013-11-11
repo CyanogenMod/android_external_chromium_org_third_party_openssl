@@ -1619,7 +1619,7 @@ new file mode 100644
 index 0000000..2e5621d
 --- /dev/null
 +++ b/crypto/poly1305/poly1305.c
-@@ -0,0 +1,320 @@
+@@ -0,0 +1,321 @@
 +/* ====================================================================
 + * Copyright (c) 2011-2013 The OpenSSL Project.  All rights reserved.
 + *
@@ -1680,6 +1680,7 @@ index 0000000..2e5621d
 +#if !defined(OPENSSL_NO_POLY1305)
 +
 +#include <openssl/poly1305.h>
++#include <openssl/crypto.h>
 +
 +#if defined(__i386) || defined(__i386__) || defined(__x86_64) || defined(__x86_64__)
 +/* We can assume little-endian. */
@@ -2375,11 +2376,11 @@ index 0000000..adcef35
 +	}
 +
 +#endif  /* !OPENSSL_NO_POLY1305 */
-diff --git a/crypto/poly1305/poly1305_arm_asm.s b/crypto/poly1305/poly1305_arm_asm.s
+diff --git a/crypto/poly1305/poly1305_arm_asm.S b/crypto/poly1305/poly1305_arm_asm.S
 new file mode 100644
 index 0000000..449d16f
 --- /dev/null
-+++ b/crypto/poly1305/poly1305_arm_asm.s
++++ b/crypto/poly1305/poly1305_arm_asm.S
 @@ -0,0 +1,2009 @@
 +# This implementation was taken from the public domain, neon2 version in
 +# SUPERCOP by D. J. Bernstein and Peter Schwabe.
@@ -5723,4 +5724,3 @@ index 4c9eabc..4790aa8 100644
  
 -- 
 1.8.4.1
-

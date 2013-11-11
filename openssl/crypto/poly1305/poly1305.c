@@ -58,6 +58,7 @@
 #if !defined(OPENSSL_NO_POLY1305)
 
 #include <openssl/poly1305.h>
+#include <openssl/crypto.h>
 
 #if defined(__i386) || defined(__i386__) || defined(__x86_64) || defined(__x86_64__)
 /* We can assume little-endian. */

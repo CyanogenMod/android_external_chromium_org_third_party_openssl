@@ -868,7 +868,7 @@ index 0000000..33b2238
 +		op[9]  = REVW_BE(REVW_BE(ip[9])  ^ (x9  + kp[5]));
 +		op[10] = REVW_BE(REVW_BE(ip[10]) ^ (x10 + kp[6]));
 +		op[11] = REVW_BE(REVW_BE(ip[11]) ^ (x11 + kp[7]));
-+		op[12] = REVW_BE(REVW_BE(ip[12]) ^ (x12 + BPI*iters+(BPI-1)));
++		op[12] = REVW_BE(REVW_BE(ip[12]) ^ (x12 + counter+BPI*iters+(BPI-1)));
 +		op[13] = REVW_BE(REVW_BE(ip[13]) ^ (x13));
 +		op[14] = REVW_BE(REVW_BE(ip[14]) ^ (x14 + np[0]));
 +		op[15] = REVW_BE(REVW_BE(ip[15]) ^ (x15 + np[1]));
@@ -1225,7 +1225,7 @@ new file mode 100644
 index 0000000..1c0c0fb
 --- /dev/null
 +++ b/crypto/evp/e_chacha20poly1305.c
-@@ -0,0 +1,261 @@
+@@ -0,0 +1,267 @@
 +/* ====================================================================
 + * Copyright (c) 2013 The OpenSSL Project.  All rights reserved.
 + *
@@ -1348,6 +1348,12 @@ index 0000000..1c0c0fb
 +	CRYPTO_poly1305_update(poly1305, length_bytes, sizeof(length_bytes));
 +}
 +
++#if __arm__
++#define ALIGNED __attribute__((aligned(16)))
++#else
++#define ALIGNED
++#endif
++
 +static ssize_t aead_chacha20_poly1305_seal(const EVP_AEAD_CTX *ctx,
 +	unsigned char *out, size_t max_out_len,
 +	const unsigned char *nonce, size_t nonce_len,
@@ -1355,7 +1361,7 @@ index 0000000..1c0c0fb
 +	const unsigned char *ad, size_t ad_len)
 +	{
 +	const struct aead_chacha20_poly1305_ctx *c20_ctx = ctx->aead_state;
-+	unsigned char poly1305_key[32];
++	unsigned char poly1305_key[32] ALIGNED;
 +	poly1305_state poly1305;
 +	const uint64_t in_len_64 = in_len;
 +
@@ -1412,7 +1418,7 @@ index 0000000..1c0c0fb
 +	{
 +	const struct aead_chacha20_poly1305_ctx *c20_ctx = ctx->aead_state;
 +	unsigned char mac[POLY1305_TAG_LEN];
-+	unsigned char poly1305_key[32];
++	unsigned char poly1305_key[32] ALIGNED;
 +	size_t out_len;
 +	poly1305_state poly1305;
 +	const uint64_t in_len_64 = in_len;
@@ -2040,7 +2046,7 @@ new file mode 100644
 index 0000000..adcef35
 --- /dev/null
 +++ b/crypto/poly1305/poly1305_arm.c
-@@ -0,0 +1,335 @@
+@@ -0,0 +1,327 @@
 +/* ====================================================================
 + * Copyright (c) 2011-2013 The OpenSSL Project.  All rights reserved.
 + *
@@ -2278,8 +2284,6 @@ index 0000000..adcef35
 +	fe1305x2 *const c = h + 1;
 +	fe1305x2 *const precomp = c + 1;
 +	unsigned int i;
-+	unsigned char data[sizeof(fe1305x2) + 16];
-+	fe1305x2 *const r2r = (fe1305x2 *) (data + (15 & (-(int) data)));
 +
 +	if (st->buf_used)
 +		{
@@ -2292,20 +2296,12 @@ index 0000000..adcef35
 +		in_len -= todo;
 +		in += todo;
 +
-+		if (st->buf_used == sizeof(st->buf))
++		if (st->buf_used == sizeof(st->buf) && in_len)
 +			{
++			addmulmod(h,h,precomp,&zero);
 +			fe1305x2_frombytearray(c, st->buf, sizeof(st->buf));
-+			r2r->v[0] = precomp->v[0];
-+			r2r->v[2] = precomp->v[2];
-+			r2r->v[4] = precomp->v[4];
-+			r2r->v[6] = precomp->v[6];
-+			r2r->v[8] = precomp->v[8];
-+			r2r->v[1] = r->v[1];
-+			r2r->v[3] = r->v[3];
-+			r2r->v[5] = r->v[5];
-+			r2r->v[7] = r->v[7];
-+			r2r->v[9] = r->v[9];
-+			addmulmod(h,h,r2r,c);
++			for (i = 0; i < 10; i++)
++				h->v[i] += c->v[i];
 +			st->buf_used = 0;
 +			}
 +		}
@@ -2313,7 +2309,7 @@ index 0000000..adcef35
 +	while (in_len > 32)
 +		{
 +		unsigned int tlen = 1048576;
-+		if (in_len < 1048576)
++		if (in_len < tlen)
 +			tlen = in_len;
 +		tlen -= blocks(h, precomp, in, tlen);
 +		in_len -= tlen;
@@ -2335,6 +2331,8 @@ index 0000000..adcef35
 +	fe1305x2 *const h = r + 1;
 +	fe1305x2 *const c = h + 1;
 +	fe1305x2 *const precomp = c + 1;
++
++	addmulmod(h,h,precomp,&zero);
 +
 +	if (st->buf_used > 16)
 +		{
@@ -5724,3 +5722,4 @@ index 4c9eabc..4790aa8 100644
  
 -- 
 1.8.4.1
+

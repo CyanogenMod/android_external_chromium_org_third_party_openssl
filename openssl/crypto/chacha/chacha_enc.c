@@ -135,7 +135,9 @@ void CRYPTO_chacha_20(unsigned char *out,
 	size_t todo, i;
 
 #if __arm__
-	if (CRYPTO_is_NEON_capable())
+	if (CRYPTO_is_NEON_capable() &&
+	    ((intptr_t)in & 15) == 0 &&
+	    ((intptr_t)out & 15) == 0)
 		{
 		CRYPTO_chacha_20_neon(out, in, in_len, key, nonce, counter);
 		return;

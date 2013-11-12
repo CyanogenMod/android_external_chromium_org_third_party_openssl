@@ -238,8 +238,6 @@ void CRYPTO_poly1305_update_neon(poly1305_state *state, const unsigned char *in,
 	fe1305x2 *const c = h + 1;
 	fe1305x2 *const precomp = c + 1;
 	unsigned int i;
-	unsigned char data[sizeof(fe1305x2) + 16];
-	fe1305x2 *const r2r = (fe1305x2 *) (data + (15 & (-(int) data)));
 
 	if (st->buf_used)
 		{
@@ -252,20 +250,12 @@ void CRYPTO_poly1305_update_neon(poly1305_state *state, const unsigned char *in,
 		in_len -= todo;
 		in += todo;
 
-		if (st->buf_used == sizeof(st->buf))
+		if (st->buf_used == sizeof(st->buf) && in_len)
 			{
+			addmulmod(h,h,precomp,&zero);
 			fe1305x2_frombytearray(c, st->buf, sizeof(st->buf));
-			r2r->v[0] = precomp->v[0];
-			r2r->v[2] = precomp->v[2];
-			r2r->v[4] = precomp->v[4];
-			r2r->v[6] = precomp->v[6];
-			r2r->v[8] = precomp->v[8];
-			r2r->v[1] = r->v[1];
-			r2r->v[3] = r->v[3];
-			r2r->v[5] = r->v[5];
-			r2r->v[7] = r->v[7];
-			r2r->v[9] = r->v[9];
-			addmulmod(h,h,r2r,c);
+			for (i = 0; i < 10; i++)
+				h->v[i] += c->v[i];
 			st->buf_used = 0;
 			}
 		}
@@ -273,7 +263,7 @@ void CRYPTO_poly1305_update_neon(poly1305_state *state, const unsigned char *in,
 	while (in_len > 32)
 		{
 		unsigned int tlen = 1048576;
-		if (in_len < 1048576)
+		if (in_len < tlen)
 			tlen = in_len;
 		tlen -= blocks(h, precomp, in, tlen);
 		in_len -= tlen;
@@ -295,6 +285,8 @@ void CRYPTO_poly1305_finish_neon(poly1305_state* state, unsigned char mac[16])
 	fe1305x2 *const h = r + 1;
 	fe1305x2 *const c = h + 1;
 	fe1305x2 *const precomp = c + 1;
+
+	addmulmod(h,h,precomp,&zero);
 
 	if (st->buf_used > 16)
 		{

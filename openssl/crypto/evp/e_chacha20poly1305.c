@@ -120,6 +120,12 @@ static void poly1305_update_with_length(poly1305_state *poly1305,
 	CRYPTO_poly1305_update(poly1305, length_bytes, sizeof(length_bytes));
 }
 
+#if __arm__
+#define ALIGNED __attribute__((aligned(16)))
+#else
+#define ALIGNED
+#endif
+
 static ssize_t aead_chacha20_poly1305_seal(const EVP_AEAD_CTX *ctx,
 	unsigned char *out, size_t max_out_len,
 	const unsigned char *nonce, size_t nonce_len,
@@ -127,7 +133,7 @@ static ssize_t aead_chacha20_poly1305_seal(const EVP_AEAD_CTX *ctx,
 	const unsigned char *ad, size_t ad_len)
 	{
 	const struct aead_chacha20_poly1305_ctx *c20_ctx = ctx->aead_state;
-	unsigned char poly1305_key[32];
+	unsigned char poly1305_key[32] ALIGNED;
 	poly1305_state poly1305;
 	const uint64_t in_len_64 = in_len;
 
@@ -184,7 +190,7 @@ static ssize_t aead_chacha20_poly1305_open(const EVP_AEAD_CTX *ctx,
 	{
 	const struct aead_chacha20_poly1305_ctx *c20_ctx = ctx->aead_state;
 	unsigned char mac[POLY1305_TAG_LEN];
-	unsigned char poly1305_key[32];
+	unsigned char poly1305_key[32] ALIGNED;
 	size_t out_len;
 	poly1305_state poly1305;
 	const uint64_t in_len_64 = in_len;

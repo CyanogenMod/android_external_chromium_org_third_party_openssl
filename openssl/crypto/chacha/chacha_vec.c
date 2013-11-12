@@ -289,7 +289,7 @@ void CRYPTO_chacha_20(
 		op[9]  = REVW_BE(REVW_BE(ip[9])  ^ (x9  + kp[5]));
 		op[10] = REVW_BE(REVW_BE(ip[10]) ^ (x10 + kp[6]));
 		op[11] = REVW_BE(REVW_BE(ip[11]) ^ (x11 + kp[7]));
-		op[12] = REVW_BE(REVW_BE(ip[12]) ^ (x12 + BPI*iters+(BPI-1)));
+		op[12] = REVW_BE(REVW_BE(ip[12]) ^ (x12 + counter+BPI*iters+(BPI-1)));
 		op[13] = REVW_BE(REVW_BE(ip[13]) ^ (x13));
 		op[14] = REVW_BE(REVW_BE(ip[14]) ^ (x14 + np[0]));
 		op[15] = REVW_BE(REVW_BE(ip[15]) ^ (x15 + np[1]));

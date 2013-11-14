@@ -609,7 +609,6 @@
       'openssl/crypto/des/des_enc.c',
       'openssl/crypto/des/fcrypt_b.c',
       'openssl/crypto/mem_clr.c',
-      'openssl/crypto/poly1305/poly1305.c',
     ],
     'openssl_x86_sources': [
       'openssl/crypto/aes/asm/aes-586.S',
@@ -625,7 +624,6 @@
       'openssl/crypto/des/asm/des-586.S',
       'openssl/crypto/md5/asm/md5-586.S',
       'openssl/crypto/modes/asm/ghash-x86.S',
-      'openssl/crypto/poly1305/poly1305_vec.c',
       'openssl/crypto/sha/asm/sha1-586.S',
       'openssl/crypto/sha/asm/sha256-586.S',
       'openssl/crypto/sha/asm/sha512-586.S',

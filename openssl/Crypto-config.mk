@@ -598,7 +598,6 @@ x86_src_files := \
   crypto/des/asm/des-586.S \
   crypto/md5/asm/md5-586.S \
   crypto/modes/asm/ghash-x86.S \
-  crypto/poly1305/poly1305_vec.c \
   crypto/sha/asm/sha1-586.S \
   crypto/sha/asm/sha256-586.S \
   crypto/sha/asm/sha512-586.S \
@@ -613,7 +612,6 @@ x86_exclude_files := \
   crypto/des/des_enc.c \
   crypto/des/fcrypt_b.c \
   crypto/mem_clr.c \
-  crypto/poly1305/poly1305.c \
 
 x86_64_c_flags := \
   -DAES_ASM \

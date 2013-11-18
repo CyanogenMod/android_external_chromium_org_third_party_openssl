@@ -593,7 +593,6 @@ x86_src_files := \
   crypto/bn/asm/co-586.S \
   crypto/bn/asm/x86-gf2m.S \
   crypto/bn/asm/x86-mont.S \
-  crypto/chacha/chacha_vec.c \
   crypto/des/asm/crypt586.S \
   crypto/des/asm/des-586.S \
   crypto/md5/asm/md5-586.S \
@@ -608,7 +607,6 @@ x86_exclude_files := \
   crypto/aes/aes_core.c \
   crypto/bf/bf_enc.c \
   crypto/bn/bn_asm.c \
-  crypto/chacha/chacha_enc.c \
   crypto/des/des_enc.c \
   crypto/des/fcrypt_b.c \
   crypto/mem_clr.c \

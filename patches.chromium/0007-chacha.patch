@@ -44,29 +44,6 @@ diff -burN android-openssl-lhash2/openssl.config android-openssl/openssl.config
  crypto/sha/asm/sha1-armv4-large.S \
  crypto/sha/asm/sha256-armv4.S \
  crypto/sha/asm/sha512-armv4.S \
-@@ -821,10 +828,11 @@
- crypto/bn/asm/co-586.S \
- crypto/bn/asm/x86-gf2m.S \
- crypto/bn/asm/x86-mont.S \
-+crypto/chacha/chacha_vec.c \
- crypto/des/asm/crypt586.S \
- crypto/des/asm/des-586.S \
- crypto/md5/asm/md5-586.S \
- crypto/modes/asm/ghash-x86.S \
- crypto/sha/asm/sha1-586.S \
- crypto/sha/asm/sha256-586.S \
- crypto/sha/asm/sha512-586.S \
-@@ -836,9 +845,10 @@
- crypto/aes/aes_cbc.c \
- crypto/bf/bf_enc.c \
- crypto/bn/bn_asm.c \
-+crypto/chacha/chacha_enc.c \
- crypto/des/des_enc.c \
- crypto/des/fcrypt_b.c \
- crypto/mem_clr.c \
- "
- 
- OPENSSL_CRYPTO_SOURCES_x86_64="\
 @@ -852,6 +863,7 @@
  crypto/bn/asm/x86_64-gf2m.S \
  crypto/bn/asm/x86_64-mont.S \

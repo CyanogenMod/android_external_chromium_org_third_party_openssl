@@ -170,6 +170,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/buffer/buf_err.c \
 	third_party/openssl/openssl/crypto/buffer/buf_str.c \
 	third_party/openssl/openssl/crypto/buffer/buffer.c \
+	third_party/openssl/openssl/crypto/chacha/chacha_enc.c \
 	third_party/openssl/openssl/crypto/cmac/cm_ameth.c \
 	third_party/openssl/openssl/crypto/cmac/cm_pmeth.c \
 	third_party/openssl/openssl/crypto/cmac/cmac.c \
@@ -303,6 +304,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/evp/e_aes.c \
 	third_party/openssl/openssl/crypto/evp/e_aes_cbc_hmac_sha1.c \
 	third_party/openssl/openssl/crypto/evp/e_bf.c \
+	third_party/openssl/openssl/crypto/evp/e_chacha20poly1305.c \
 	third_party/openssl/openssl/crypto/evp/e_des.c \
 	third_party/openssl/openssl/crypto/evp/e_des3.c \
 	third_party/openssl/openssl/crypto/evp/e_null.c \
@@ -314,6 +316,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/evp/e_xcbc_d.c \
 	third_party/openssl/openssl/crypto/evp/encode.c \
 	third_party/openssl/openssl/crypto/evp/evp_acnf.c \
+	third_party/openssl/openssl/crypto/evp/evp_aead.c \
 	third_party/openssl/openssl/crypto/evp/evp_cnf.c \
 	third_party/openssl/openssl/crypto/evp/evp_enc.c \
 	third_party/openssl/openssl/crypto/evp/evp_err.c \
@@ -412,6 +415,7 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/pkcs7/pk7_smime.c \
 	third_party/openssl/openssl/crypto/pkcs7/pkcs7err.c \
 	third_party/openssl/openssl/crypto/pqueue/pqueue.c \
+	third_party/openssl/openssl/crypto/poly1305/poly1305.c \
 	third_party/openssl/openssl/crypto/rand/md_rand.c \
 	third_party/openssl/openssl/crypto/rand/rand_egd.c \
 	third_party/openssl/openssl/crypto/rand/rand_err.c \

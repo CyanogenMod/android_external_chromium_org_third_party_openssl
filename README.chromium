@@ -189,6 +189,9 @@ located in patches.chromium/. Currently this consists of:
     table that is being iterated over. This happens in certain rare cases
     when SSL_CTX_flush_sessions() is called. See http://crbug.com/298606
 
+  chacha.patch
+    Add support for ChaCha20+Poly1305 cipher suites.
+
 **************************************************************************
 Adding new Chromium patches:
 

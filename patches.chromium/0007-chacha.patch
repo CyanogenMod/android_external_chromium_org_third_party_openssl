@@ -1595,7 +1595,7 @@ diff -burN android-openssl-lhash2/patches/aead_support.patch android-openssl/pat
 diff -burN android-openssl-lhash2/patches/chacha20poly1305.patch android-openssl/patches/chacha20poly1305.patch
 --- android-openssl-lhash2/patches/chacha20poly1305.patch	1969-12-31 19:00:00.000000000 -0500
 +++ android-openssl/patches/chacha20poly1305.patch	2013-11-05 15:15:28.454480948 -0500
-@@ -0,0 +1,5725 @@
+@@ -0,0 +1,5740 @@
 +From 2688f00904e4ffd647afcff69bb8fe6df8c5902b Mon Sep 17 00:00:00 2001
 +From: Adam Langley <agl@chromium.org>
 +Date: Mon, 9 Sep 2013 12:13:24 -0400
@@ -1646,6 +1646,21 @@ diff -burN android-openssl-lhash2/patches/chacha20poly1305.patch android-openssl
 + create mode 100644 crypto/poly1305/poly1305_vec.c
 + create mode 100644 crypto/poly1305/poly1305test.c
 +
++diff --git a/openssl/ssl/ssl_ciph.c b/openssl/ssl/ssl_ciph.c
++index db85b29..cebb18a 100644
++--- a/ssl/ssl_ciph.c
+++++ b/ssl/ssl_ciph.c
++@@ -1442,7 +1442,9 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
++ 	ssl_cipher_apply_rule(0, SSL_kEECDH, 0, 0, 0, 0, 0, CIPHER_ADD, -1, &head, &tail);
++ 	ssl_cipher_apply_rule(0, SSL_kEECDH, 0, 0, 0, 0, 0, CIPHER_DEL, -1, &head, &tail);
++ 
++-	/* AES is our preferred symmetric cipher */
+++	/* CHACHA20 is fast and safe on all hardware and is thus our preferred
+++	 * symmetric cipher, with AES second. */
+++	ssl_cipher_apply_rule(0, 0, 0, SSL_CHACHA20POLY1305, 0, 0, 0, CIPHER_ADD, -1, &head, &tail);
++ 	ssl_cipher_apply_rule(0, 0, 0, SSL_AES, 0, 0, 0, CIPHER_ADD, -1, &head, &tail);
++ 
++ 	/* Temporarily enable everything else for sorting */
 +diff --git a/Configure b/Configure
 +index 9c803dc..1b95384 100755
 +--- a/Configure

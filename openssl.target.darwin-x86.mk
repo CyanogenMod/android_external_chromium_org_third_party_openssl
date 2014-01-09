@@ -594,6 +594,7 @@ MY_CFLAGS_Debug := \
 	-fvisibility=hidden \
 	-pipe \
 	-fPIC \
+	-funwind-tables \
 	-w \
 	-Wno-format \
 	-m32 \
@@ -702,6 +703,7 @@ MY_CFLAGS_Release := \
 	-fvisibility=hidden \
 	-pipe \
 	-fPIC \
+	-funwind-tables \
 	-w \
 	-Wno-format \
 	-m32 \
@@ -729,9 +731,7 @@ MY_CFLAGS_Release := \
 	-fno-ident \
 	-fdata-sections \
 	-ffunction-sections \
-	-fomit-frame-pointer \
-	-fno-unwind-tables \
-	-fno-asynchronous-unwind-tables
+	-fomit-frame-pointer
 
 MY_DEFS_Release := \
 	'-DV8_DEPRECATION_WARNINGS' \

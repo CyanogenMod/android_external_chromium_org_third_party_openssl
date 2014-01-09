@@ -590,6 +590,7 @@ MY_CFLAGS_Debug := \
 	-fvisibility=hidden \
 	-pipe \
 	-fPIC \
+	-funwind-tables \
 	-w \
 	-Wno-format \
 	-EL \
@@ -688,6 +689,7 @@ MY_CFLAGS_Release := \
 	-fvisibility=hidden \
 	-pipe \
 	-fPIC \
+	-funwind-tables \
 	-w \
 	-Wno-format \
 	-EL \

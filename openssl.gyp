@@ -21,6 +21,9 @@
           'openssl/crypto/modes',
           'openssl/include',
         ],
+        'openssl_public_include_dirs': [
+          'openssl/include',
+        ],
       },
       'sources': [
         '<@(openssl_common_sources)',
@@ -83,6 +86,7 @@
           'variables': {
             # Ensure the 64-bit opensslconf.h header is used.
             'openssl_include_dirs+': [ 'config/x64' ],
+            'openssl_public_include_dirs+': [ 'config/x64' ],
           },
         }],
         ['component == "shared_library"', {
@@ -107,7 +111,7 @@
       ],
       'direct_dependent_settings': {
         'include_dirs': [
-          'openssl/include',
+          '<@(openssl_public_include_dirs)',
         ],
       },
     },

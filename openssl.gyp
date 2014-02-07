@@ -21,6 +21,9 @@
           'openssl/crypto/modes',
           'openssl/include',
         ],
+        'openssl_public_include_dirs': [
+          'openssl/include',
+        ],
       },
       'sources': [
         '<@(openssl_common_sources)',
@@ -65,24 +68,12 @@
         ['target_arch == "x64"', {
           'sources': [ '<@(openssl_x86_64_sources)' ],
           'sources!': [ '<@(openssl_x86_64_source_excludes)' ],
-          'conditions': [
-            ['OS != "android"', {
-              # Because rc4-x86_64.S has a problem,
-              # We use the C rc4 source instead of the ASM source.
-              # This hurts performance, but it's not a problem
-              # because no production code uses openssl on x86-64.
-              'sources/': [
-                ['exclude', 'openssl/crypto/rc4/asm/rc4-x86_64\\.S' ],
-                ['include', 'openssl/crypto/rc4/rc4_enc\\.c' ],
-                ['include', 'openssl/crypto/rc4/rc4_skey\\.c' ],
-              ],
-            }]
-          ],
           'defines': [ '<@(openssl_x86_64_defines)' ],
           'defines!': [ 'OPENSSL_NO_ASM' ],
           'variables': {
             # Ensure the 64-bit opensslconf.h header is used.
             'openssl_include_dirs+': [ 'config/x64' ],
+            'openssl_public_include_dirs+': [ 'config/x64' ],
           },
         }],
         ['component == "shared_library"', {
@@ -107,7 +98,7 @@
       ],
       'direct_dependent_settings': {
         'include_dirs': [
-          'openssl/include',
+          '<@(openssl_public_include_dirs)',
         ],
       },
     },

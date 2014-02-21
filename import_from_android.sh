@@ -456,9 +456,11 @@ generate_gyp_file () {
 dump "Generating 64-bit configuration header file."
 mkdir -p $PROGDIR/config/x64/openssl/
 sed \
+  -e 's|^#define RC4_INT unsigned char|#define RC4_INT unsigned int|g' \
   -e 's|^#define BN_LLONG|#undef BN_LLONG|g' \
   -e 's|^#define THIRTY_TWO_BIT|#undef THIRTY_TWO_BIT|g' \
   -e 's|^#undef SIXTY_FOUR_BIT_LONG|#define SIXTY_FOUR_BIT_LONG|g' \
+  -e 's|^#define BF_PTR|#undef BF_PTR|g' \
   $PROGDIR/openssl/include/openssl/opensslconf.h \
   > $PROGDIR/config/x64/openssl/opensslconf.h
 

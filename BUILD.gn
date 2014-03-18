@@ -1,0 +1,4 @@
+component("openssl") {
+  external = true
+  gyp_file = "openssl.gyp"
+}

@@ -641,6 +641,7 @@ MY_DEFS_Debug := \
 	'-DSHA1_ASM' \
 	'-DSHA256_ASM' \
 	'-DUSE_OPENSSL=1' \
+	'-DUSE_OPENSSL_CERTS=1' \
 	'-DANDROID' \
 	'-D__GNU_SOURCE=1' \
 	'-DUSE_STLPORT=1' \
@@ -740,6 +741,7 @@ MY_DEFS_Release := \
 	'-DSHA1_ASM' \
 	'-DSHA256_ASM' \
 	'-DUSE_OPENSSL=1' \
+	'-DUSE_OPENSSL_CERTS=1' \
 	'-DANDROID' \
 	'-D__GNU_SOURCE=1' \
 	'-DUSE_STLPORT=1' \

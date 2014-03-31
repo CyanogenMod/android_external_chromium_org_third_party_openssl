@@ -24,7 +24,6 @@ GYP_COPIED_SOURCE_ORIGIN_DIRS :=
 LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/cryptlib.c \
 	third_party/openssl/openssl/crypto/mem.c \
-	third_party/openssl/openssl/crypto/mem_clr.c \
 	third_party/openssl/openssl/crypto/mem_dbg.c \
 	third_party/openssl/openssl/crypto/cversion.c \
 	third_party/openssl/openssl/crypto/ex_data.c \
@@ -34,7 +33,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/o_time.c \
 	third_party/openssl/openssl/crypto/o_str.c \
 	third_party/openssl/openssl/crypto/o_dir.c \
-	third_party/openssl/openssl/crypto/aes/aes_cbc.c \
 	third_party/openssl/openssl/crypto/aes/aes_cfb.c \
 	third_party/openssl/openssl/crypto/aes/aes_ctr.c \
 	third_party/openssl/openssl/crypto/aes/aes_ecb.c \
@@ -170,7 +168,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/buffer/buf_err.c \
 	third_party/openssl/openssl/crypto/buffer/buf_str.c \
 	third_party/openssl/openssl/crypto/buffer/buffer.c \
-	third_party/openssl/openssl/crypto/chacha/chacha_enc.c \
 	third_party/openssl/openssl/crypto/cmac/cm_ameth.c \
 	third_party/openssl/openssl/crypto/cmac/cm_pmeth.c \
 	third_party/openssl/openssl/crypto/cmac/cmac.c \
@@ -415,7 +412,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/pkcs7/pk7_smime.c \
 	third_party/openssl/openssl/crypto/pkcs7/pkcs7err.c \
 	third_party/openssl/openssl/crypto/pqueue/pqueue.c \
-	third_party/openssl/openssl/crypto/poly1305/poly1305.c \
 	third_party/openssl/openssl/crypto/rand/md_rand.c \
 	third_party/openssl/openssl/crypto/rand/rand_egd.c \
 	third_party/openssl/openssl/crypto/rand/rand_err.c \
@@ -428,8 +424,6 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/crypto/rc2/rc2_skey.c \
 	third_party/openssl/openssl/crypto/rc2/rc2cfb64.c \
 	third_party/openssl/openssl/crypto/rc2/rc2ofb64.c \
-	third_party/openssl/openssl/crypto/rc4/rc4_enc.c \
-	third_party/openssl/openssl/crypto/rc4/rc4_skey.c \
 	third_party/openssl/openssl/crypto/rc4/rc4_utl.c \
 	third_party/openssl/openssl/crypto/ripemd/rmd_dgst.c \
 	third_party/openssl/openssl/crypto/ripemd/rmd_one.c \
@@ -571,18 +565,32 @@ LOCAL_SRC_FILES := \
 	third_party/openssl/openssl/ssl/t1_reneg.c \
 	third_party/openssl/openssl/ssl/t1_srvr.c \
 	third_party/openssl/openssl/ssl/tls_srp.c \
-	third_party/openssl/openssl/crypto/aes/asm/aes-mips.S \
-	third_party/openssl/openssl/crypto/bn/asm/bn-mips.S \
-	third_party/openssl/openssl/crypto/bn/asm/mips-mont.S \
-	third_party/openssl/openssl/crypto/sha/asm/sha1-mips.S \
-	third_party/openssl/openssl/crypto/sha/asm/sha256-mips.S
+	third_party/openssl/openssl/crypto/aes/asm/aes-x86_64.S \
+	third_party/openssl/openssl/crypto/aes/asm/aesni-x86_64.S \
+	third_party/openssl/openssl/crypto/aes/asm/aesni-sha1-x86_64.S \
+	third_party/openssl/openssl/crypto/aes/asm/bsaes-x86_64.S \
+	third_party/openssl/openssl/crypto/aes/asm/vpaes-x86_64.S \
+	third_party/openssl/openssl/crypto/bn/asm/modexp512-x86_64.S \
+	third_party/openssl/openssl/crypto/bn/asm/x86_64-gcc.c \
+	third_party/openssl/openssl/crypto/bn/asm/x86_64-gf2m.S \
+	third_party/openssl/openssl/crypto/bn/asm/x86_64-mont.S \
+	third_party/openssl/openssl/crypto/bn/asm/x86_64-mont5.S \
+	third_party/openssl/openssl/crypto/chacha/chacha_vec.c \
+	third_party/openssl/openssl/crypto/md5/asm/md5-x86_64.S \
+	third_party/openssl/openssl/crypto/modes/asm/ghash-x86_64.S \
+	third_party/openssl/openssl/crypto/rc4/asm/rc4-md5-x86_64.S \
+	third_party/openssl/openssl/crypto/rc4/asm/rc4-x86_64.S \
+	third_party/openssl/openssl/crypto/sha/asm/sha1-x86_64.S \
+	third_party/openssl/openssl/crypto/sha/asm/sha256-x86_64.S \
+	third_party/openssl/openssl/crypto/sha/asm/sha512-x86_64.S \
+	third_party/openssl/openssl/crypto/poly1305/poly1305_vec.c \
+	third_party/openssl/openssl/crypto/x86_64cpuid.S
 
 
 # Flags passed to both C and C++ files.
 MY_CFLAGS_Debug := \
 	-fstack-protector \
 	--param=ssp-buffer-size=4 \
-	 \
 	-fno-exceptions \
 	-fno-strict-aliasing \
 	-Wno-unused-parameter \
@@ -590,10 +598,12 @@ MY_CFLAGS_Debug := \
 	-fvisibility=hidden \
 	-pipe \
 	-fPIC \
+	-Wno-unused-local-typedefs \
 	-w \
 	-Wno-format \
-	-EL \
-	-mhard-float \
+	-m64 \
+	-march=x86-64 \
+	-fuse-ld=gold \
 	-ffunction-sections \
 	-funwind-tables \
 	-g \
@@ -636,10 +646,18 @@ MY_DEFS_Debug := \
 	'-DNO_WINDOWS_BRAINDEATH' \
 	'-DPURIFY' \
 	'-DMONOLITH' \
+	'-DOPENSSL_BN_ASM_GF2m' \
 	'-DOPENSSL_BN_ASM_MONT' \
 	'-DAES_ASM' \
+	'-DGHASH_ASM' \
 	'-DSHA1_ASM' \
 	'-DSHA256_ASM' \
+	'-DSHA512_ASM' \
+	'-DMD5_ASM' \
+	'-DDES_PTR' \
+	'-DDES_RISC1' \
+	'-DDES_UNROLL' \
+	'-DOPENSSL_CPUID_OBJ' \
 	'-DUSE_OPENSSL=1' \
 	'-DUSE_OPENSSL_CERTS=1' \
 	'-DANDROID' \
@@ -654,6 +672,7 @@ MY_DEFS_Debug := \
 
 # Include paths placed before CFLAGS/CPPFLAGS
 LOCAL_C_INCLUDES_Debug := \
+	$(LOCAL_PATH)/third_party/openssl/config/x64 \
 	$(LOCAL_PATH)/third_party/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto \
@@ -672,7 +691,6 @@ LOCAL_CPPFLAGS_Debug := \
 	-fno-threadsafe-statics \
 	-fvisibility-inlines-hidden \
 	-Wno-deprecated \
-	-Wno-uninitialized \
 	-Wno-non-virtual-dtor \
 	-Wno-sign-promo \
 	-Wno-non-virtual-dtor
@@ -682,7 +700,6 @@ LOCAL_CPPFLAGS_Debug := \
 MY_CFLAGS_Release := \
 	-fstack-protector \
 	--param=ssp-buffer-size=4 \
-	 \
 	-fno-exceptions \
 	-fno-strict-aliasing \
 	-Wno-unused-parameter \
@@ -690,10 +707,12 @@ MY_CFLAGS_Release := \
 	-fvisibility=hidden \
 	-pipe \
 	-fPIC \
+	-Wno-unused-local-typedefs \
 	-w \
 	-Wno-format \
-	-EL \
-	-mhard-float \
+	-m64 \
+	-march=x86-64 \
+	-fuse-ld=gold \
 	-ffunction-sections \
 	-funwind-tables \
 	-g \
@@ -736,10 +755,18 @@ MY_DEFS_Release := \
 	'-DNO_WINDOWS_BRAINDEATH' \
 	'-DPURIFY' \
 	'-DMONOLITH' \
+	'-DOPENSSL_BN_ASM_GF2m' \
 	'-DOPENSSL_BN_ASM_MONT' \
 	'-DAES_ASM' \
+	'-DGHASH_ASM' \
 	'-DSHA1_ASM' \
 	'-DSHA256_ASM' \
+	'-DSHA512_ASM' \
+	'-DMD5_ASM' \
+	'-DDES_PTR' \
+	'-DDES_RISC1' \
+	'-DDES_UNROLL' \
+	'-DOPENSSL_CPUID_OBJ' \
 	'-DUSE_OPENSSL=1' \
 	'-DUSE_OPENSSL_CERTS=1' \
 	'-DANDROID' \
@@ -754,6 +781,7 @@ MY_DEFS_Release := \
 
 # Include paths placed before CFLAGS/CPPFLAGS
 LOCAL_C_INCLUDES_Release := \
+	$(LOCAL_PATH)/third_party/openssl/config/x64 \
 	$(LOCAL_PATH)/third_party/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto \
@@ -772,7 +800,6 @@ LOCAL_CPPFLAGS_Release := \
 	-fno-threadsafe-statics \
 	-fvisibility-inlines-hidden \
 	-Wno-deprecated \
-	-Wno-uninitialized \
 	-Wno-non-virtual-dtor \
 	-Wno-sign-promo \
 	-Wno-non-virtual-dtor
@@ -790,8 +817,8 @@ LOCAL_LDFLAGS_Debug := \
 	-Wl,-z,relro \
 	-Wl,-z,noexecstack \
 	-fPIC \
-	-EL \
-	-Wl,--no-keep-memory \
+	-m64 \
+	-fuse-ld=gold \
 	-nostdlib \
 	-Wl,--no-undefined \
 	-Wl,--exclude-libs=ALL \
@@ -807,8 +834,8 @@ LOCAL_LDFLAGS_Release := \
 	-Wl,-z,relro \
 	-Wl,-z,noexecstack \
 	-fPIC \
-	-EL \
-	-Wl,--no-keep-memory \
+	-m64 \
+	-fuse-ld=gold \
 	-nostdlib \
 	-Wl,--no-undefined \
 	-Wl,--exclude-libs=ALL \

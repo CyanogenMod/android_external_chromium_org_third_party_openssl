@@ -13,7 +13,7 @@ index e47eef1..d1b3224 100644
  				   )
  					{
 diff --git a/ssl/ssl_lib.c b/ssl/ssl_lib.c
-index 45a76ae..e691d19 100644
+index 45a76ae..d75b9f7 100644
 --- a/ssl/ssl_lib.c
 +++ b/ssl/ssl_lib.c
 @@ -3305,12 +3305,39 @@ int SSL_cutthrough_complete(const SSL *s)
@@ -27,7 +27,7 @@ index 45a76ae..e691d19 100644
  			s->state == SSL3_ST_CR_FINISHED_A));
  	}
  
-+int ssl3_can_cutthrough(SSL *s)
++int ssl3_can_cutthrough(const SSL *s)
 +	{
 +	const SSL_CIPHER *c;
 +
@@ -58,15 +58,18 @@ index 45a76ae..e691d19 100644
   * vairable, freeing  EVP_MD_CTX previously stored in that variable, if
   * any. If EVP_MD pointer is passed, initializes ctx with this md
 diff --git a/ssl/ssl_locl.h b/ssl/ssl_locl.h
-index 2f8cda8..23e969e 100644
+index 2f8cda8..3732825 100644
 --- a/ssl/ssl_locl.h
 +++ b/ssl/ssl_locl.h
 @@ -1160,6 +1160,8 @@ const EVP_MD *tls12_get_hash(unsigned char hash_alg);
  int tls1_channel_id_hash(EVP_MD_CTX *ctx, SSL *s);
  #endif
  
-+int ssl3_can_cutthrough(SSL *s);
++int ssl3_can_cutthrough(const SSL *s);
 +
  EVP_MD_CTX* ssl_replace_hash(EVP_MD_CTX **hash,const EVP_MD *md) ;
  void ssl_clear_hash_ctx(EVP_MD_CTX **hash);
  int ssl_add_serverhello_renegotiate_ext(SSL *s, unsigned char *p, int *len,
+diff --git a/patches.chromium/0009-stricter_cutthrough.patch b/patches.chromium/0009-stricter_cutthrough.patch
+new file mode 100644
+index 0000000..e69de29

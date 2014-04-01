@@ -3311,7 +3311,7 @@ int SSL_cutthrough_complete(const SSL *s)
 			s->state == SSL3_ST_CR_FINISHED_A));
 	}
 
-int ssl3_can_cutthrough(SSL *s)
+int ssl3_can_cutthrough(const SSL *s)
 	{
 	const SSL_CIPHER *c;
 

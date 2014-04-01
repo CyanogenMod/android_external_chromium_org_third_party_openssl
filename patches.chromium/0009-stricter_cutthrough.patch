@@ -70,6 +70,3 @@ index 2f8cda8..3732825 100644
  EVP_MD_CTX* ssl_replace_hash(EVP_MD_CTX **hash,const EVP_MD *md) ;
  void ssl_clear_hash_ctx(EVP_MD_CTX **hash);
  int ssl_add_serverhello_renegotiate_ext(SSL *s, unsigned char *p, int *len,
-diff --git a/patches.chromium/0009-stricter_cutthrough.patch b/patches.chromium/0009-stricter_cutthrough.patch
-new file mode 100644
-index 0000000..e69de29

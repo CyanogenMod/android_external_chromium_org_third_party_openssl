@@ -192,6 +192,10 @@ located in patches.chromium/. Currently this consists of:
   chacha.patch
     Add support for ChaCha20+Poly1305 cipher suites.
 
+  stricter_cutthrough.patch
+    Requires NPN and a PFS cipher suite to enable cut-through (false start) on
+    the client.
+
 **************************************************************************
 Adding new Chromium patches:
 

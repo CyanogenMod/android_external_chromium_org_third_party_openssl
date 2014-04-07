@@ -625,7 +625,6 @@ MY_DEFS_Debug := \
 	'-DDISABLE_NACL' \
 	'-DCHROMIUM_BUILD' \
 	'-DUSE_LIBJPEG_TURBO=1' \
-	'-DUSE_MOJO=1' \
 	'-DENABLE_WEBRTC=1' \
 	'-DUSE_PROPRIETARY_CODECS' \
 	'-DENABLE_CONFIGURATION_POLICY' \
@@ -727,7 +726,6 @@ MY_DEFS_Release := \
 	'-DDISABLE_NACL' \
 	'-DCHROMIUM_BUILD' \
 	'-DUSE_LIBJPEG_TURBO=1' \
-	'-DUSE_MOJO=1' \
 	'-DENABLE_WEBRTC=1' \
 	'-DUSE_PROPRIETARY_CODECS' \
 	'-DENABLE_CONFIGURATION_POLICY' \
@@ -789,9 +787,9 @@ LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 ### Rules for final target.
 
 LOCAL_LDFLAGS_Debug := \
-	-Wl,--fatal-warnings \
 	-Wl,-z,now \
 	-Wl,-z,relro \
+	-Wl,--fatal-warnings \
 	-Wl,-z,noexecstack \
 	-fPIC \
 	-EL \
@@ -806,9 +804,9 @@ LOCAL_LDFLAGS_Debug := \
 
 
 LOCAL_LDFLAGS_Release := \
-	-Wl,--fatal-warnings \
 	-Wl,-z,now \
 	-Wl,-z,relro \
+	-Wl,--fatal-warnings \
 	-Wl,-z,noexecstack \
 	-fPIC \
 	-EL \

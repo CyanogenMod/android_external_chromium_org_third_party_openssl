@@ -1160,6 +1160,8 @@ const EVP_MD *tls12_get_hash(unsigned char hash_alg);
 int tls1_channel_id_hash(EVP_MD_CTX *ctx, SSL *s);
 #endif
 
+int ssl3_can_cutthrough(const SSL *s);
+
 EVP_MD_CTX* ssl_replace_hash(EVP_MD_CTX **hash,const EVP_MD *md) ;
 void ssl_clear_hash_ctx(EVP_MD_CTX **hash);
 int ssl_add_serverhello_renegotiate_ext(SSL *s, unsigned char *p, int *len,

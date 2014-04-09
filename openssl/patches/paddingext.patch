@@ -1,20 +1,23 @@
-From 61a9671951205d66382556b2502993ffc9201f59 Mon Sep 17 00:00:00 2001
-From: Adam Langley <agl@chromium.org>
-Date: Wed, 11 Dec 2013 16:25:17 -0500
-Subject: [PATCH 57/57] Add padding extension.
-
-This change adds a padding extension, when needed, in order to work
-around bugs in F5 terminators.
----
- ssl/t1_lib.c | 20 ++++++++++++++++++++
- ssl/tls1.h   |  4 ++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/ssl/s23_clnt.c b/ssl/s23_clnt.c
-index 47673e7..94e9692 100644
---- a/ssl/s23_clnt.c
-+++ b/ssl/s23_clnt.c
-@@ -466,7 +466,10 @@ static int ssl23_client_hello(SSL *s)
+diff -burN android-openssl.orig/include/openssl/tls1.h android-openssl/include/openssl/tls1.h
+--- android-openssl.orig/include/openssl/tls1.h	2014-04-07 17:20:17.990940592 -0700
++++ android-openssl/include/openssl/tls1.h	2014-04-07 17:22:32.432921935 -0700
+@@ -230,6 +230,12 @@
+ /* ExtensionType value from RFC5620 */
+ #define TLSEXT_TYPE_heartbeat	15
+ 
++/* ExtensionType value for TLS padding extension.
++ * http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml
++ * http://tools.ietf.org/html/draft-agl-tls-padding-03
++ */
++#define TLSEXT_TYPE_padding	21
++
+ /* ExtensionType value from RFC4507 */
+ #define TLSEXT_TYPE_session_ticket		35
+ 
+diff -burN android-openssl.orig/ssl/s23_clnt.c android-openssl/ssl/s23_clnt.c
+--- android-openssl.orig/ssl/s23_clnt.c	2014-04-07 17:20:17.990940592 -0700
++++ android-openssl/ssl/s23_clnt.c	2014-04-07 17:21:55.042370926 -0700
+@@ -466,7 +466,10 @@
  			{
  			/* create Client Hello in SSL 3.0/TLS 1.0 format */
  
@@ -26,11 +29,10 @@ index 47673e7..94e9692 100644
  			d = p = &(buf[9]);
  			
  			*(p++) = version_major;
-diff --git a/ssl/s3_clnt.c b/ssl/s3_clnt.c
-index a657360..faa8d36 100644
---- a/ssl/s3_clnt.c
-+++ b/ssl/s3_clnt.c
-@@ -752,7 +752,9 @@ int ssl3_client_hello(SSL *s)
+diff -burN android-openssl.orig/ssl/s3_clnt.c android-openssl/ssl/s3_clnt.c
+--- android-openssl.orig/ssl/s3_clnt.c	2014-04-07 17:20:18.040941329 -0700
++++ android-openssl/ssl/s3_clnt.c	2014-04-07 17:21:55.042370926 -0700
+@@ -758,7 +758,9 @@
  		if (RAND_pseudo_bytes(p,SSL3_RANDOM_SIZE-4) <= 0)
  			goto err;
  
@@ -41,11 +43,10 @@ index a657360..faa8d36 100644
  		d=p= &(buf[4]);
  
  		/* version indicates the negotiated version: for example from
-diff --git a/ssl/t1_lib.c b/ssl/t1_lib.c
-index 5578056..f9ad9d9 100644
---- a/ssl/t1_lib.c
-+++ b/ssl/t1_lib.c
-@@ -695,6 +695,31 @@ unsigned char *ssl_add_clienthello_tlsext(SSL *s, unsigned char *p, unsigned cha
+diff -burN android-openssl.orig/ssl/t1_lib.c android-openssl/ssl/t1_lib.c
+--- android-openssl.orig/ssl/t1_lib.c	2014-04-07 17:20:18.000940737 -0700
++++ android-openssl/ssl/t1_lib.c	2014-04-07 17:21:55.042370926 -0700
+@@ -680,6 +680,31 @@
                  }
  #endif
  
@@ -77,20 +78,19 @@ index 5578056..f9ad9d9 100644
  	if ((extdatalen = ret-p-2)== 0) 
  		return p;
  
-diff --git a/ssl/tls1.h b/ssl/tls1.h
-index ecf5da7..df8f482 100644
---- a/ssl/tls1.h
-+++ b/ssl/tls1.h
-@@ -255,6 +255,10 @@ extern "C" {
- #define TLSEXT_TYPE_channel_id			30031
- #define TLSEXT_TYPE_channel_id_new		30032
+diff -burN android-openssl.orig/ssl/tls1.h android-openssl/ssl/tls1.h
+--- android-openssl.orig/ssl/tls1.h	2014-04-07 17:20:18.000940737 -0700
++++ android-openssl/ssl/tls1.h	2014-04-07 17:21:55.042370926 -0700
+@@ -230,6 +230,12 @@
+ /* ExtensionType value from RFC5620 */
+ #define TLSEXT_TYPE_heartbeat	15
  
-+/* See https://tools.ietf.org/html/draft-agl-tls-padding-02
-+ * Number not yet IANA assigned. */
-+#define TLSEXT_TYPE_padding			35655
++/* ExtensionType value for TLS padding extension.
++ * http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml
++ * http://tools.ietf.org/html/draft-agl-tls-padding-03
++ */
++#define TLSEXT_TYPE_padding	21
 +
- /* NameType value from RFC 3546 */
- #define TLSEXT_NAMETYPE_host_name 0
- /* status request value from RFC 3546 */
--- 
-1.8.5.1
+ /* ExtensionType value from RFC4507 */
+ #define TLSEXT_TYPE_session_ticket		35
+ 

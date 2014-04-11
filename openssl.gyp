@@ -59,11 +59,26 @@
           'defines': [ '<@(openssl_mips_defines)' ],
           'defines!': [ 'OPENSSL_NO_ASM' ],
         }],
-        ['target_arch == "ia32"', {
+        ['target_arch == "ia32" and OS !="mac"', {
           'sources': [ '<@(openssl_x86_sources)' ],
           'sources!': [ '<@(openssl_x86_source_excludes)' ],
           'defines': [ '<@(openssl_x86_defines)' ],
           'defines!': [ 'OPENSSL_NO_ASM' ],
+        }],
+        ['target_arch == "ia32" and OS == "mac"', {
+          'sources': [ '<@(openssl_mac_ia32_sources)' ],
+          'sources!': [ '<@(openssl_mac_ia32_source_excludes)' ],
+          'defines': [ '<@(openssl_mac_ia32_defines)' ],
+          'defines!': [ 'OPENSSL_NO_ASM' ],
+          'variables': {
+            # Ensure the 32-bit opensslconf.h header for OS X is used.
+            'openssl_include_dirs+': [ 'config/mac/ia32' ],
+            'openssl_public_include_dirs+': [ 'config/mac/ia32' ],
+          },
+          'xcode_settings': {
+            # Clang needs this to understand the inline assembly keyword 'asm'.
+            'GCC_C_LANGUAGE_STANDARD': 'gnu99',
+          },
         }],
         ['target_arch == "x64"', {
           'sources': [ '<@(openssl_x86_64_sources)' ],

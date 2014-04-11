@@ -196,6 +196,9 @@ located in patches.chromium/. Currently this consists of:
     Requires NPN and a PFS cipher suite to enable cut-through (false start) on
     the client.
 
+  mac_osx32_assembly.patch
+    Add support for 32 bit OS X with assembly optimization.
+     
 **************************************************************************
 Adding new Chromium patches:
 

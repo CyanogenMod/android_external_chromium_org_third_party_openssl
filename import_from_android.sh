@@ -404,7 +404,7 @@ generate_gyp_file () {
   echo "# See 'import_from_android.sh --help' for details."
 
   local ALL_PREFIXES="OPENSSL_CRYPTO OPENSSL_SSL"
-  local ALL_ARCHS="arm mips x86 x86_64"
+  local ALL_ARCHS="arm mips x86 x86_64 mac_ia32"
   local PREFIX ARCH LIST
 
   print_gyp "{"
@@ -463,6 +463,15 @@ sed \
   -e 's|^#define BF_PTR|#undef BF_PTR|g' \
   $PROGDIR/openssl/include/openssl/opensslconf.h \
   > $PROGDIR/config/x64/openssl/opensslconf.h
+
+dump "Generating OS X 32-bit configuration header file."
+mkdir -p $PROGDIR/config/mac/ia32/openssl/
+sed \
+  -e '4a#ifndef OPENSSL_SYSNAME_MACOSX\n# define OPENSSL_SYSNAME_MACOSX\n#endif' \
+  -e 's|^#define RC4_INT unsigned char|#define RC4_INT unsigned int|g' \
+  -e 's|^#define DES_LONG unsigned int|#define DES_LONG unsigned long|g' \
+  $PROGDIR/openssl/include/openssl/opensslconf.h \
+  > $PROGDIR/config/mac/ia32/openssl/opensslconf.h
 
 dump "Generating .gypi file."
 . $ANDROID_SRC_DIR/openssl.config

@@ -22,7 +22,7 @@ config("openssl_internal_config") {
 # The list of OpenSSL files is kept in openssl.gypi. Read it.
 gypi_values = exec_script(
     "//build/gypi_to_gn.py",
-    [ rebase_path("//third_party/openssl/openssl.gypi") ]
+    [ rebase_path("//third_party/openssl/openssl.gypi") ],
     "scope",
     [ "//third_party/openssl/openssl.gypi" ])
 

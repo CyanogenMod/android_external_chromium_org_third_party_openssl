@@ -19,10 +19,10 @@ config("openssl_internal_config") {
   visibility = ":*"  # Only targets in this file can depend on this.
 }
 
-# The list of OpenSSL files is kept in skia_gn_files.gypi. Read it.
+# The list of OpenSSL files is kept in openssl.gypi. Read it.
 gypi_values = exec_script(
     "//build/gypi_to_gn.py",
-    [ rebase_path("//third_party/openssl/openssl.gypi") ]
+    [ rebase_path("//third_party/openssl/openssl.gypi") ],
     "scope",
     [ "//third_party/openssl/openssl.gypi" ])
 

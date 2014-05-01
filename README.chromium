@@ -198,6 +198,10 @@ located in patches.chromium/. Currently this consists of:
 
   mac_osx32_assembly.patch
     Add support for 32 bit OS X with assembly optimization.
+
+  fix_limit_checks.patch
+    Fix limit checks in writing extensions. BUF_MEM_grow allocates 4/3 the size
+    requested, so it doesn't overflow the actual allocation.
      
 **************************************************************************
 Adding new Chromium patches:

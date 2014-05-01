@@ -206,7 +206,12 @@ located in patches.chromium/. Currently this consists of:
   fix_limit_checks.patch
     Fix limit checks in writing extensions. BUF_MEM_grow allocates 4/3 the size
     requested, so it doesn't overflow the actual allocation.
-     
+
+  reorder_extensions.patch
+    Move the ECC extensions to the end of the ClientHello to work around a
+    server bug. Some servers are intolerant to the last extension being empty.
+    See https://crbug.com/363583
+
 **************************************************************************
 Adding new Chromium patches:
 

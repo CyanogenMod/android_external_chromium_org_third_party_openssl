@@ -92,6 +92,9 @@
           },
         }],
         ['component == "shared_library"', {
+          'xcode_settings': {
+            'GCC_SYMBOLS_PRIVATE_EXTERN': 'NO',  # no -fvisibility=hidden
+          },
           'cflags!': ['-fvisibility=hidden'],
         }],
         ['clang==1', {

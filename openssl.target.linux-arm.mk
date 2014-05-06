@@ -599,7 +599,6 @@ MY_CFLAGS_Debug := \
 	-w \
 	-Wno-format \
 	-fno-tree-sra \
-	-fuse-ld=gold \
 	-Wno-psabi \
 	-ffunction-sections \
 	-funwind-tables \
@@ -703,7 +702,6 @@ MY_CFLAGS_Release := \
 	-w \
 	-Wno-format \
 	-fno-tree-sra \
-	-fuse-ld=gold \
 	-Wno-psabi \
 	-ffunction-sections \
 	-funwind-tables \

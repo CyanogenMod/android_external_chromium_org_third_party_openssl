@@ -583,6 +583,18 @@ int ssl3_connect(SSL *s)
 #endif
 						s->s3->tmp.next_state=SSL3_ST_CR_FINISHED_A;
 					}
+					if (s->s3->tlsext_channel_id_valid)
+					{
+					/* This is a non-resumption handshake. If it
+					 * involves ChannelID, then record the
+					 * handshake hashes at this point in the
+					 * session so that any resumption of this
+					 * session with ChannelID can sign those
+					 * hashes. */
+					ret = tls1_record_handshake_hashes_for_channel_id(s);
+					if (ret <= 0)
+						goto end;
+					}
 				}
 			s->init_num=0;
 			break;

@@ -212,6 +212,9 @@ located in patches.chromium/. Currently this consists of:
     server bug. Some servers are intolerant to the last extension being empty.
     See https://crbug.com/363583
 
+  export_certificate_types.patch
+    Export the certificate_types field in CertificateRequest.
+
 **************************************************************************
 Adding new Chromium patches:
 

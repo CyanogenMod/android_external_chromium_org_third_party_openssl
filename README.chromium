@@ -215,6 +215,10 @@ located in patches.chromium/. Currently this consists of:
   export_certificate_types.patch
     Export the certificate_types field in CertificateRequest.
 
+  send_client_verify_cleanup.patch
+    Clean up ssl3_send_client_verify so the various cases (TLS 1.2, pre-TLS-1.2
+    cases for each cipher suite) are less intertwined.
+
 **************************************************************************
 Adding new Chromium patches:
 

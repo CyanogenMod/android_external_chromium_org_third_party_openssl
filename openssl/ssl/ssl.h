@@ -547,6 +547,13 @@ struct ssl_session_st
 #ifndef OPENSSL_NO_SRP
 	char *srp_username;
 #endif
+
+	/* original_handshake_hash contains the handshake hash (either
+	 * SHA-1+MD5 or SHA-2, depending on TLS version) for the original, full
+	 * handshake that created a session. This is used by Channel IDs during
+	 * resumption. */
+	unsigned char original_handshake_hash[EVP_MAX_MD_SIZE];
+	unsigned int original_handshake_hash_len;
 	};
 
 #endif

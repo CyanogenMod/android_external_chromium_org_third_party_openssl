@@ -677,6 +677,7 @@ MY_DEFS_Debug := \
 
 # Include paths placed before CFLAGS/CPPFLAGS
 LOCAL_C_INCLUDES_Debug := \
+	$(gyp_shared_intermediate_dir) \
 	$(LOCAL_PATH)/third_party/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto \
@@ -793,6 +794,7 @@ MY_DEFS_Release := \
 
 # Include paths placed before CFLAGS/CPPFLAGS
 LOCAL_C_INCLUDES_Release := \
+	$(gyp_shared_intermediate_dir) \
 	$(LOCAL_PATH)/third_party/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl \
 	$(LOCAL_PATH)/third_party/openssl/openssl/crypto \
